@@ -1,0 +1,2479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IR Project Hub | CA&S Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ===== TAB NAV ===== */
+.ir-topbar{
+  background:#0e1117;
+  display:flex;
+  align-items:center;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-wrap:wrap;
+  gap:0;
+}
+.ir-brand{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;
+  padding:14px 20px 14px 0;
+  border-right:1px solid rgba(255,255,255,0.1);
+  margin-right:6px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.ir-tab{
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:400;
+  color:rgba(255,255,255,0.45);
+  padding:14px 18px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.ir-tab:hover{color:rgba(255,255,255,0.8);}
+.ir-tab.active{color:white;font-weight:500;border-bottom-color:white;}
+.ir-updated{
+  margin-left:auto;
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  color:rgba(255,255,255,0.2);
+  letter-spacing:.06em;
+  padding:0 4px;
+}
+
+/* ===== PANELS ===== */
+.ir-panel{display:none;}
+.ir-panel.active{display:block;}
+
+/* ===== BRIEF STYLES ===== */
+
+:root {
+  --ink: #0e1117;
+  --ink-2: #3a3d45;
+  --ink-3: #6b6f7a;
+  --ink-4: #9ca0ab;
+  --surface: #f5f4f0;
+  --surface-2: #eceae4;
+  --surface-3: #ffffff;
+  --border: rgba(14,17,23,0.10);
+  --border-strong: rgba(14,17,23,0.18);
+
+  --mac: #0F6E56;
+  --mac-bg: #E1F5EE;
+  --mac-border: #9FE1CB;
+  --nlb: #185FA5;
+  --nlb-bg: #E6F1FB;
+  --nlb-border: #B5D4F4;
+  --key: #534AB7;
+  --key-bg: #EEEDFE;
+  --key-border: #AFA9EC;
+  --ps: #854F0B;
+  --ps-bg: #FAEEDA;
+  --ps-border: #FAC775;
+  --gap: #A32D2D;
+  --gap-bg: #FCEBEB;
+  --gap-border: #F7C1C1;
+
+  --r: 8px;
+  --r-lg: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ---- HEADER ---- */
+.header {
+  background: var(--ink);
+  color: white;
+  padding: 36px 40px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 30%;
+  width: 300px; height: 150px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.02);
+}
+.header-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.header-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.header-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 300;
+  max-width: 560px;
+}
+.header-meta {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.meta-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.meta-pill.urgent {
+  background: rgba(163,45,45,0.3);
+  color: #FFAAAA;
+  border-color: rgba(163,45,45,0.4);
+}
+
+/* ---- LAYOUT ---- */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+/* ---- SECTION TITLES ---- */
+.section-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---- BRIEF CARD ---- */
+.brief-card {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+.brief-card p {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.brief-card p:last-child { margin-bottom: 0; }
+.brief-card strong { color: var(--ink); font-weight: 500; }
+
+/* ---- DEADLINES ---- */
+.deadlines {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.deadline-item {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.deadline-item.urgent {
+  border-color: var(--gap-border);
+  background: var(--gap-bg);
+}
+.deadline-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+}
+.deadline-item.urgent .deadline-date { color: var(--gap); }
+.deadline-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.deadline-item.urgent .deadline-text { color: var(--gap); }
+.deadline-owner {
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+
+/* ---- LEGEND ---- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.leg-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ---- PHASE ---- */
+.phase {
+  margin-bottom: 8px;
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.phase-header:hover .phase-label-text { color: var(--ink); }
+.phase-number {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.phase-label-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color .15s;
+}
+.phase-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---- STEP ---- */
+.step {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+  margin-bottom: 6px;
+  border-left: 3px solid var(--border-strong);
+  transition: box-shadow .15s;
+}
+.step:hover { box-shadow: 0 2px 12px rgba(14,17,23,0.07); }
+.step.mac { border-left-color: var(--mac); }
+.step.nlb { border-left-color: var(--nlb); }
+.step.key { border-left-color: var(--key); }
+.step.ps  { border-left-color: var(--ps); }
+.step.multi { border-left-color: #888; }
+
+.step-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  flex: 1;
+}
+.step-sub {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+  padding-left: 24px;
+}
+.step-data {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.65;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+.step-data strong { color: var(--ink-2); font-weight: 500; }
+
+.step-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.badges { display: flex; gap: 5px; flex-wrap: wrap; }
+.badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: .02em;
+}
+.badge.mac { background: var(--mac-bg); color: var(--mac); border: 1px solid var(--mac-border); }
+.badge.nlb { background: var(--nlb-bg); color: var(--nlb); border: 1px solid var(--nlb-border); }
+.badge.key { background: var(--key-bg); color: var(--key); border: 1px solid var(--key-border); }
+.badge.ps  { background: var(--ps-bg);  color: var(--ps);  border: 1px solid var(--ps-border); }
+.badge.multi { background: var(--surface-2); color: var(--ink-3); border: 1px solid var(--border); }
+.owner-tag {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ---- GAP BUTTON ---- */
+.gap-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--gap-bg);
+  color: var(--gap);
+  border: 1px solid var(--gap-border);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background .12s;
+  white-space: nowrap;
+}
+.gap-btn:hover { background: var(--gap-border); }
+
+/* ---- ARROW ---- */
+.flow-arrow {
+  text-align: center;
+  color: var(--ink-4);
+  font-size: 18px;
+  line-height: 1;
+  margin: 2px 0;
+  padding-left: 18px;
+}
+
+/* ---- ACTIONS TABLE ---- */
+.actions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 32px;
+  font-size: 13px;
+}
+.actions-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-strong);
+}
+.actions-table th:first-child { border-radius: 8px 0 0 0; }
+.actions-table th:last-child { border-radius: 0 8px 0 0; }
+.actions-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--ink-2);
+  background: var(--surface-3);
+}
+.actions-table tr:last-child td { border-bottom: none; }
+.actions-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+.actions-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+.person-name {
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.due-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.due-chip.urgent {
+  background: var(--gap-bg);
+  color: var(--gap);
+}
+
+/* ---- MODAL ---- */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(14,17,23,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s;
+  padding: 24px;
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface-3);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 16px 48px rgba(14,17,23,0.2);
+  transform: translateY(8px);
+  transition: transform .15s;
+}
+.modal-bg.open .modal { transform: translateY(0); }
+.modal-gap-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--gap);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.modal-body {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.modal-owner {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.modal-close {
+  float: right;
+  font-size: 11px;
+  color: var(--ink-4);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.modal-close:hover { background: var(--surface-2); }
+
+/* ---- FOOTER ---- */
+.footer {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  padding: 32px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  .header { padding: 24px 20px 20px; }
+  .header-title { font-size: 22px; }
+  .container { padding: 20px 16px 40px; }
+  .actions-table { font-size: 12px; }
+}
+
+/* ---- SHARED NAV ---- */
+.ir-nav {
+  background: #0e1117;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  flex-wrap: wrap;
+}
+.ir-nav-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  padding: 14px 20px 14px 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.ir-nav-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 14px 16px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.ir-nav-link:hover { color: rgba(255,255,255,0.85); }
+.ir-nav-link.active {
+  color: white;
+  font-weight: 500;
+  border-bottom-color: white;
+}
+.ir-nav-link.active:hover { color: white; }
+
+
+
+/* ===== FLOW STYLES ===== */
+
+body { margin: 0; background: #f5f4f0; font-family: Arial, sans-serif; padding: 24px; }
+.card { background: white; border-radius: 12px; padding: 24px; max-width: 760px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+h1 { font-size: 18px; font-weight: 600; color: #0e1117; margin: 0 0 4px; }
+.sub { font-size: 12px; color: #6b6f7a; margin-bottom: 16px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; padding: 10px 14px; background: #f5f4f0; border-radius: 8px; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #444; }
+.ls { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+svg text { font-family: Arial, sans-serif; }
+
+/* ---- SHARED NAV ---- */
+.ir-nav {
+  background: #0e1117;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  flex-wrap: wrap;
+}
+.ir-nav-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  padding: 14px 20px 14px 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.ir-nav-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 14px 16px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.ir-nav-link:hover { color: rgba(255,255,255,0.85); }
+.ir-nav-link.active {
+  color: white;
+  font-weight: 500;
+  border-bottom-color: white;
+}
+.ir-nav-link.active:hover { color: white; }
+
+
+
+/* ===== GANTT STYLES ===== */
+
+:root {
+  --ink: #0e1117;
+  --ink-2: #3a3d45;
+  --ink-3: #6b6f7a;
+  --ink-4: #9ca0ab;
+  --surface: #f5f4f0;
+  --surface-2: #eceae4;
+  --surface-3: #ffffff;
+  --border: rgba(14,17,23,0.09);
+  --border-strong: rgba(14,17,23,0.18);
+
+  --mac: #0F6E56;
+  --mac-bg: #E1F5EE;
+  --nlb: #185FA5;
+  --nlb-bg: #E6F1FB;
+  --key: #534AB7;
+  --key-bg: #EEEDFE;
+  --ps: #854F0B;
+  --ps-bg: #FAEEDA;
+  --cas: #0e1117;
+  --cas-bg: #F1EFE8;
+  --multi: #5F5E5A;
+  --multi-bg: #E8E7E1;
+
+  --done: #1D9E75;
+  --done-bg: #E1F5EE;
+  --progress: #185FA5;
+  --progress-bg: #E6F1FB;
+  --open: #854F0B;
+  --open-bg: #FAEEDA;
+  --blocked: #A32D2D;
+  --blocked-bg: #FCEBEB;
+
+  --r: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  background: var(--ink);
+  color: white;
+  padding: 32px 40px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -40px;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.02);
+}
+.header-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.header-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  margin-bottom: 6px;
+}
+.header-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 300;
+}
+.header-meta {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.meta-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.meta-pill.urgent {
+  background: rgba(163,45,45,0.3);
+  color: #FFAAAA;
+  border-color: rgba(163,45,45,0.4);
+}
+
+/* TOOLBAR */
+.toolbar {
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.toolbar-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-right: 4px;
+}
+.filter-btn {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: all .12s;
+}
+.filter-btn:hover { background: var(--surface-2); color: var(--ink); }
+.filter-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+.toolbar-sep { width: 1px; height: 20px; background: var(--border-strong); margin: 0 4px; }
+.add-btn {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: white;
+  cursor: pointer;
+  transition: opacity .12s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.add-btn:hover { opacity: .85; }
+
+/* CONTAINER */
+.container { padding: 24px 32px 60px; }
+
+/* PHASE HEADER */
+.phase-block { margin-bottom: 28px; }
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.phase-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.phase-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.phase-line { flex: 1; height: 1px; background: var(--border-strong); }
+
+/* GANTT GRID */
+.gantt-wrap {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.gantt-grid {
+  display: grid;
+  grid-template-columns: 220px 90px 90px 100px 1fr;
+  min-width: 760px;
+}
+.gantt-grid-scroll { overflow-x: auto; }
+
+/* HEADER ROW */
+.g-head {
+  display: contents;
+}
+.g-head > div {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-strong);
+}
+.g-head > .th-bar { padding: 10px 14px; }
+
+/* ROW */
+.g-row {
+  display: contents;
+}
+.g-row > div {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  background: var(--surface-3);
+  min-height: 48px;
+  transition: background .1s;
+}
+.g-row:hover > div { background: #faf9f7; }
+.g-row:last-child > div { border-bottom: none; }
+
+/* TASK NAME */
+.task-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  flex: 1;
+  outline: none;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.4;
+}
+.task-name:focus {
+  background: var(--surface-2);
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: -2px -4px;
+}
+
+/* DATE */
+.task-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: transparent;
+  font-family: 'DM Mono', monospace;
+  width: 100%;
+}
+.task-date:focus {
+  background: var(--surface-2);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.task-date.overdue { color: #A32D2D; font-weight: 500; }
+
+/* OWNER */
+.task-owner {
+  font-size: 11px;
+  color: var(--ink-3);
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  width: 100%;
+}
+.task-owner:focus {
+  background: var(--surface-2);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+/* STATUS BADGE */
+.status-cell { justify-content: flex-start; }
+.status-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: .01em;
+}
+.status-badge.done { background: var(--done-bg); color: var(--done); }
+.status-badge.progress { background: var(--progress-bg); color: var(--progress); }
+.status-badge.open { background: var(--open-bg); color: var(--open); }
+.status-badge.blocked { background: var(--blocked-bg); color: var(--blocked); }
+
+/* GANTT BAR AREA */
+.bar-cell {
+  padding: 8px 14px;
+  position: relative;
+  min-width: 300px;
+}
+.bar-track {
+  height: 10px;
+  background: var(--surface-2);
+  border-radius: 20px;
+  position: relative;
+  overflow: visible;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 20px;
+  position: absolute;
+  left: 0;
+  transition: width .3s ease;
+}
+.bar-fill.done { background: var(--done); }
+.bar-fill.progress { background: var(--progress); opacity: .7; }
+.bar-fill.open { background: var(--open); opacity: .5; }
+.bar-fill.blocked { background: var(--blocked); opacity: .6; }
+
+/* MONTH MARKERS */
+.month-labels {
+  display: flex;
+  padding: 0 14px 0 calc(220px + 90px + 90px + 100px + 14px);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.month-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  flex: 1;
+  text-align: center;
+  padding: 5px 0;
+}
+.month-label.current { color: var(--ink-2); font-weight: 500; }
+
+/* TODAY LINE */
+.today-marker {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: calc(100% + 4px);
+  background: #A32D2D;
+  border-radius: 2px;
+  z-index: 10;
+}
+.today-tip {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: #A32D2D;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* TEAM BADGE */
+.team-badge {
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 6px;
+  flex-shrink: 0;
+  letter-spacing: .02em;
+}
+.team-mac { background: var(--mac-bg); color: var(--mac); }
+.team-nlb { background: var(--nlb-bg); color: var(--nlb); }
+.team-key { background: var(--key-bg); color: var(--key); }
+.team-ps  { background: var(--ps-bg);  color: var(--ps); }
+.team-cas { background: var(--cas-bg); color: var(--cas); }
+.team-all { background: var(--multi-bg); color: var(--multi); }
+
+/* DELETE BTN */
+.del-btn {
+  font-size: 14px;
+  color: var(--ink-4);
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0 4px;
+  opacity: 0;
+  transition: opacity .1s;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+.g-row:hover .del-btn { opacity: 1; }
+.del-btn:hover { color: var(--blocked); }
+
+/* SAVE BAR */
+.save-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 32px rgba(14,17,23,0.25);
+  font-size: 13px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.save-bar.visible { opacity: 1; pointer-events: all; }
+.save-bar-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.save-bar-btn.primary { background: white; color: var(--ink); }
+.save-bar-btn.primary:hover { background: #f0efea; }
+.save-bar-btn.secondary { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+.save-bar-btn.secondary:hover { background: rgba(255,255,255,0.18); }
+
+/* MODAL */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(14,17,23,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s;
+  padding: 24px;
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface-3);
+  border-radius: var(--r-xl);
+  padding: 24px;
+  max-width: 440px;
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 16px 48px rgba(14,17,23,0.2);
+}
+.modal h3 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.modal-row { margin-bottom: 12px; }
+.modal-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+.modal-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+}
+.modal-input:focus { border-color: var(--ink); }
+.modal-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  cursor: pointer;
+}
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+.modal-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.modal-btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
+.modal-btn.secondary { background: var(--surface); color: var(--ink-2); }
+
+/* LEGEND */
+.legend-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-3);
+}
+.leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-3); }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* MILESTONE */
+.milestone-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(163,45,45,0.04);
+  border-bottom: 1px solid rgba(163,45,45,0.1);
+  font-size: 12px;
+  color: #A32D2D;
+  font-family: 'DM Mono', monospace;
+}
+.milestone-icon { font-size: 14px; }
+.milestone-date { opacity: .6; font-size: 10px; }
+
+/* SUMMARY STRIP */
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.summary-card {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 14px;
+}
+.summary-num {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.summary-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+@media (max-width: 700px) {
+  .container { padding: 16px; }
+  .toolbar { padding: 10px 16px; }
+  .header { padding: 24px 20px 20px; }
+  .legend-row { padding: 10px 16px; }
+  .month-labels { display: none; }
+}
+
+/* ---- SHARED NAV ---- */
+.ir-nav {
+  background: #0e1117;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  flex-wrap: wrap;
+}
+.ir-nav-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  padding: 14px 20px 14px 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.ir-nav-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 14px 16px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.ir-nav-link:hover { color: rgba(255,255,255,0.85); }
+.ir-nav-link.active {
+  color: white;
+  font-weight: 500;
+  border-bottom-color: white;
+}
+.ir-nav-link.active:hover { color: white; }
+
+
+
+/* ===== OVERRIDES ===== */
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#f5f4f0;
+  color:#0e1117;
+  font-size:14px;
+  line-height:1.6;
+  min-height:100vh;
+}
+/* prevent duplicate sticky headers from stacking */
+.ir-panel .header,
+.ir-panel .toolbar{
+  position:relative;
+  top:auto;
+}
+/* fix flow panel background */
+#panel-flow .card{
+  background:white;
+  border-radius:12px;
+  padding:24px;
+  max-width:760px;
+  margin:24px auto;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="ir-topbar">
+  <div class="ir-brand">CA&amp;S Digital &middot; IR Project</div>
+  <button class="ir-tab active" onclick="showTab('brief',this)">&#128203;&nbsp; Team Brief</button>
+  <button class="ir-tab" onclick="showTab('flow',this)">&#128200;&nbsp; Process Flow</button>
+  <button class="ir-tab" onclick="showTab('gantt',this)">&#128198;&nbsp; Project Gantt</button>
+  <span class="ir-updated">Updated 15 Apr 2026</span>
+</div>
+
+<!-- PANEL: TEAM BRIEF -->
+<div class="ir-panel active" id="panel-brief">
+<!-- HEADER -->
+<div class="header">
+  <div class="header-eyebrow">CA&S Digital · Image Recognition Project</div>
+  <div class="header-title">End-to-End Process Flow<br>& Team Action Brief</div>
+  <div class="header-sub">How shelf photos become compliance data — and what every team needs to deliver to make it work</div>
+  <div class="header-meta">
+    <span class="meta-pill urgent">⚠ Ranging lists due 17 April 2026</span>
+    <span class="meta-pill">Updated: 15 April 2026</span>
+    <span class="meta-pill">8 open gaps</span>
+    <span class="meta-pill">Full deploy: July 2026</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- BRIEF -->
+  <div class="section-title" style="margin-top:8px">What this document is</div>
+  <div class="brief-card">
+    <p>This is the authoritative end-to-end reference for the Image Recognition (IR) rollout across Pick n Pay and Checkers stores. It shows exactly what happens — and what data is needed — at every step from a merchandiser opening the app to compliance data appearing on the dashboard.</p>
+    <p>Four technology teams are involved: <strong>Mac Mobile</strong> (field app, server infrastructure, and metadata packaging), <strong>Neurolabs</strong> (AI image recognition), <strong>Keystone / Cognizance</strong> (analytics and compliance engine), and <strong>Pack &amp; Stack</strong> (ranging data). The confirmed data flow is: photo → Mac Mobile → Neurolabs → Mac Mobile (adds metadata) → Keystone → compliance result → Mac Mobile app → merchandiser. Every gap in the data chain is documented here with its owner and status.</p>
+    <p><strong>How to use this:</strong> Use it in every team meeting as the shared reference. When a problem surfaces, find the step it lives in, check the gap, and assign the action. Click any orange gap button to see the full detail.</p>
+  </div>
+
+  <!-- DEADLINES -->
+  <div class="section-title">Critical deadlines</div>
+  <div class="deadlines">
+    <div class="deadline-item urgent">
+      <div class="deadline-date">17 April 2026 — HARD DEADLINE</div>
+      <div class="deadline-text">All ranging lists finalised — Checkers &amp; PnP</div>
+      <div class="deadline-owner">Gareth / Jordan / Camelle</div>
+    </div>
+    <div class="deadline-item urgent">
+      <div class="deadline-date">This week</div>
+      <div class="deadline-text">Keystone API category-level response example</div>
+      <div class="deadline-owner">Jordan</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">Week of 20 April</div>
+      <div class="deadline-text">Product catalog cleanup — Mac Mobile + Neurolabs sync</div>
+      <div class="deadline-owner">Tina / Cameron Dawson / Toby</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">Week of 20 April</div>
+      <div class="deadline-text">New GCP app release — restores image quality</div>
+      <div class="deadline-owner">Mac Mobile</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">24 April 2026, 11am SAST</div>
+      <div class="deadline-text">KeyDash 2.0 Tutorial</div>
+      <div class="deadline-owner">Jordan hosts</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">June 2026</div>
+      <div class="deadline-text">Stress testing — 1,452 stores</div>
+      <div class="deadline-owner">All teams</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">July 2026</div>
+      <div class="deadline-text">Full deployment and volume ramp-up</div>
+      <div class="deadline-owner">All teams</div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="section-title">System legend</div>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--mac-bg);border:1px solid var(--mac-border)"></div> Mac Mobile (field app)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--nlb-bg);border:1px solid var(--nlb-border)"></div> Neurolabs (image AI)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--key-bg);border:1px solid var(--key-border)"></div> Keystone / Cognizance (analytics)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--ps-bg);border:1px solid var(--ps-border)"></div> Pack &amp; Stack (ranging data)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--gap-bg);border:1px solid var(--gap-border)"></div> Known gap — click for detail</div>
+  </div>
+
+  <!-- PROCESS FLOW -->
+  <div class="section-title">End-to-end process flow</div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-header">
+    <div class="phase-number">1</div>
+    <div class="phase-label-text">Field — Merchandiser arrives at store</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">01</div>
+      <div class="step-title">Merchandiser logs in to the app</div>
+    </div>
+    <div class="step-sub">Opens Mac Mobile on their handset at the store</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Merchandiser credentials (username + password) linked to their account in Mac Mobile. Must be set up in advance by Sean's team. If credentials aren't configured, the merchandiser cannot start.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">02</div>
+      <div class="step-title">App loads the correct store</div>
+    </div>
+    <div class="step-sub">Merchandiser selects or is auto-assigned the store they are visiting</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Store ID and name must exist in Mac Mobile's system, and the store must be linked to the merchandiser's route. If the store isn't configured, the merchandiser cannot proceed.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">03</div>
+      <div class="step-title">App shows the category form and principals</div>
+      <button class="gap-btn" onclick="openGap(1)">⚠ GAP 1</button>
+    </div>
+    <div class="step-sub">Merchandiser opens a form for the category (e.g. "Snacking") and sees the list of brand principals to cover (e.g. Nestle, Unilever)</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Ranging list from Pack &amp; Stack must be loaded into Keystone, which feeds Mac Mobile. The ranging list controls which principals appear in the app for this store. If a principal is missing from the ranging list, it will not appear in the app — and compliance will show as zero — even if those products are physically on shelf.<br><br>
+      <strong>Critical data chain:</strong> Pack &amp; Stack → Gareth → Keystone → Mac Mobile
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge ps">Pack &amp; Stack</span><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Gareth / Jordan / Camelle</div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-header">
+    <div class="phase-number">2</div>
+    <div class="phase-label-text">Capture — Taking the shelf photo</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">04</div>
+      <div class="step-title">Merchandiser takes a photo of the shelf</div>
+      <button class="gap-btn" onclick="openGap(2)">⚠ GAP 2</button>
+    </div>
+    <div class="step-sub">Standing in the aisle, they photograph the relevant shelf section for the selected category</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Good image quality — not blurry, not tilted, no glare. The new GCP app (releasing week of 20 April) will automatically reject bad images before upload. Until then, poor photos are a leading cause of recognition failures. Error rate is currently at 42% — up from 10%.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge multi">GCP</span></div>
+      <div class="owner-tag">Owner: Mac Mobile / Neurolabs</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">05</div>
+      <div class="step-title">Photo is uploaded to Neurolabs</div>
+      <button class="gap-btn" onclick="openGap(3)">⚠ GAP 3</button>
+    </div>
+    <div class="step-sub">The image travels from the handset through Mac Mobile's servers (Vodacom-hosted) to Neurolabs</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Stable server connection. Mac Mobile's Vodacom servers must be operational and passing images through correctly. Server outages mean the image never reaches Neurolabs — the merchandiser waits and no result is returned.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-header">
+    <div class="phase-number">3</div>
+    <div class="phase-label-text">AI Processing — Neurolabs identifies what's on shelf</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step nlb">
+    <div class="step-top">
+      <div class="step-num">06</div>
+      <div class="step-title">AI scans the image and detects products</div>
+    </div>
+    <div class="step-sub">Neurolabs' image recognition engine looks at the photo and identifies every product it can see on the shelf</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> The photo from step 05. Neurolabs runs the detection automatically. No additional input data is needed at this point beyond the image itself.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Toby / Neurolabs</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step nlb">
+    <div class="step-top">
+      <div class="step-num">07</div>
+      <div class="step-title">AI matches each product to the catalog</div>
+      <button class="gap-btn" onclick="openGap(4)">⚠ GAP 4</button>
+    </div>
+    <div class="step-sub">Each detected product is matched to a known SKU (product code) using its barcode and operational category</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> A clean, complete product catalog in Neurolabs — with correct barcodes and correct operational categories for every product. If the catalog has duplicates, missing barcodes, or wrong categories, Neurolabs cannot match the product and it is dropped from the results entirely.<br><br>
+      <strong>Critical sign-off required:</strong> Tina (PnP) and Toby (Neurolabs) must confirm the catalog is clean before this step can be trusted.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Toby / Tina / Cameron Dawson</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step nlb">
+    <div class="step-top">
+      <div class="step-num">08a</div>
+      <div class="step-title">Neurolabs sends recognition results back to Mac Mobile</div>
+    </div>
+    <div class="step-sub">Results do NOT go directly to Keystone — they return to Mac Mobile first</div>
+    <div class="step-data">
+      <strong>Data passed:</strong> SKU code + confidence score (%) per detected product. This goes back to Mac Mobile, not to Keystone. This is a critical step that was previously undocumented.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge nlb">Neurolabs</span><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Toby (Neurolabs) → Christo / Sean (Mac Mobile)</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">08b</div>
+      <div class="step-title">Mac Mobile adds metadata and sends enriched request to Keystone</div>
+      <button class="gap-btn" onclick="openGap(8)">⚠ GAP 8</button>
+    </div>
+    <div class="step-sub">Mac Mobile packages the Neurolabs results with store and session context, then forwards the combined JSON to Keystone</div>
+    <div class="step-data">
+      <strong>Metadata added by Mac Mobile:</strong> Store ID (customer ID), rep identifier, form/category the photo was taken for, and the principal. This is what allows Keystone to know which store, rep, category and principal the Neurolabs results belong to.<br><br>
+      <strong>Why this matters:</strong> Keystone never receives raw Neurolabs output. If the store ID passed by Mac Mobile is a duplicate or stale ID from the old Pack &amp; Stack system, Keystone may process the request against the wrong ranging list or return no result at all.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Christo / Sean (Mac Mobile) → Jordan (Keystone)</div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-header">
+    <div class="phase-number">4</div>
+    <div class="phase-label-text">Transform — Keystone calculates compliance</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step ps">
+    <div class="step-top">
+      <div class="step-num">09</div>
+      <div class="step-title">Keystone checks what should be on shelf</div>
+      <button class="gap-btn" onclick="openGap(5)">⚠ GAP 5</button>
+    </div>
+    <div class="step-sub">Keystone looks at the ranging list for this store — the master list of what products should be stocked here</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> A complete, store-level ranging list covering all principals. If the ranging list is partial, Keystone has no baseline for those missing principals. Compliance will show as zero for them — even if the products are physically on shelf.<br><br>
+      <strong>Hard deadline: 17 April 2026</strong> — all ranging lists must be finalised for Checkers and PnP.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge ps">Pack &amp; Stack</span><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Gareth / Jordan / Camelle · Senior: Ruan</div>
+      <div class="step-title">Keystone compares what's there vs what should be there</div>
+      <button class="gap-btn" onclick="openGap(6)">⚠ GAP 6</button>
+    </div>
+    <div class="step-sub">Cross-references the Neurolabs SKU results against the ranging list to calculate on-shelf compliance per product</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Operational categories from Neurolabs must match the categories Keystone uses. If they don't align — which is the current problem — Keystone cannot correctly group and compare products by category. This is the months-long unresolved category mapping issue.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Cameron Dawson / Jordan / Tina</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step key">
+    <div class="step-top">
+      <div class="step-num">11</div>
+      <div class="step-title">Keystone builds the action output</div>
+      <button class="gap-btn" onclick="openGap(7)">⚠ GAP 7</button>
+    </div>
+    <div class="step-sub">Structures the compliance result so the app can display it as Category &gt; Principal &gt; Items — what the merchandiser needs to fix</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> The API response must include category-level data, not just store + principal level. Currently the Keystone API does not return this structure. Jordan is building an example response this week, once GAP 6 is resolved. This is blocking step 13.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Jordan / Keystone</div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-header">
+    <div class="phase-number">5</div>
+    <div class="phase-label-text">Delivery — Results return to the merchandiser</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step multi">
+    <div class="step-top">
+      <div class="step-num">12</div>
+      <div class="step-title">Keystone sends the results to Mac Mobile</div>
+    </div>
+    <div class="step-sub">A structured JSON response travels via API from Keystone back to Mac Mobile's servers</div>
+    <div class="step-data">
+      <strong>Data passed:</strong> Compliance status per product, structured as Category &gt; Principal &gt; Items. Mac Mobile receives this and renders it in the app on the merchandiser's handset.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Jordan / Keystone + Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">13</div>
+      <div class="step-title">The app shows the merchandiser what to action</div>
+    </div>
+    <div class="step-sub">On the handset, the merchandiser sees exactly which products are missing or out of compliance — and what to fix</div>
+    <div class="step-data">
+      <strong>What they see:</strong> A list of products under each principal that need attention, structured clearly by category. This is the "moment of truth" for the whole system — everything upstream exists to produce this screen.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase-header">
+    <div class="phase-number">6</div>
+    <div class="phase-label-text">Feedback — Action taken and loop closed</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">14</div>
+      <div class="step-title">Merchandiser restocks or fixes the shelf</div>
+    </div>
+    <div class="step-sub">Based on the app's instructions, they move products, fill gaps, or flag out-of-stocks to their supervisor</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Nothing additional at this point. The merchandiser acts on what the app tells them. The quality of these instructions depends entirely on the data quality in every step above.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge multi">Field team</span></div>
+      <div class="owner-tag">Owner: Field operations</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">15</div>
+      <div class="step-title">Merchandiser closes the form</div>
+    </div>
+    <div class="step-sub">Form is submitted in the app — triggering a second photo if required for validation — and the visit is recorded</div>
+    <div class="step-data">
+      <strong>Data captured:</strong> Visit timestamp, form completion status, any after-action photos. All feeds back through Mac Mobile to Keystone for dashboard reporting.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step key">
+    <div class="step-top">
+      <div class="step-num">16</div>
+      <div class="step-title">Compliance data lands in the dashboard</div>
+    </div>
+    <div class="step-sub">Keystone records the visit results — OSA scores, compliance rates, and trends by store, category, and principal</div>
+    <div class="step-data">
+      <strong>What this powers:</strong> KeyDash 2.0 reporting (tutorial 24 April, 11am SAST). Principal-level and category-level reporting for Cameron Dawson and the CA&amp;S Digital team. This is the end deliverable that clients and principals will see.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Cameron Dawson / Jordan / Keystone</div>
+    </div>
+  </div>
+
+  <!-- ACTIONS TABLE -->
+  <div class="section-title" style="margin-top:40px">Open actions by person — as at 15 April 2026</div>
+  <table class="actions-table">
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>Action</th>
+        <th>Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="person-name">Gareth</div><div style="font-size:11px;color:var(--ink-4)">CA&amp;S Digital</div></td>
+        <td>Resolve ranging list issues and confirm pilot scope for Checkers and PnP. Follow up daily with Jordan and team on data and ranging gaps. Track category parameter alignment, product sync, and sign-offs.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Cameron Dawson</div><div style="font-size:11px;color:var(--ink-4)">Keystone</div></td>
+        <td>Coordinate with Mac Mobile and Tina on catalog cleanup. Push for green-light approval on ranging and listing docs with Pack &amp; Stack. Coordinate with Camelle for dashboard data issue screenshots.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Jordan</div><div style="font-size:11px;color:var(--ink-4)">Cognizance</div></td>
+        <td>Review ranging lists for Checkers and PnP — confirm which principals are included. Send current ranging lists to team for validation. Prepare example API response with category-level data once SKU-category mapping is received. Review Haleon Article Master Data file with Luke.</td>
+        <td><span class="due-chip urgent">This week</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Toby</div><div style="font-size:11px;color:var(--ink-4)">Neurolabs</div></td>
+        <td>Provide full product export with barcode and operational category for catalog. Arrange catalog managers to validate image recognition accuracy.</td>
+        <td><span class="due-chip">ASAP</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Tina</div><div style="font-size:11px;color:var(--ink-4)">PnP / Pack &amp; Stack</div></td>
+        <td>Lead product data cleanup. Coordinate with Mac Mobile on catalog alignment. Participate in final sign-off on ranging and category parameters.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Ruan</div><div style="font-size:11px;color:var(--ink-4)">Pack &amp; Stack — Senior</div></td>
+        <td>Senior sign-off on all ranging and listing data from Pack &amp; Stack side. Ensure POS scan data is complete and covers all principals for Checkers and PnP. Final escalation point for any Pack &amp; Stack data blockers.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Camelle</div><div style="font-size:11px;color:var(--ink-4)">Pack &amp; Stack</div></td>
+        <td>Day-to-day coordination on ranging data and POS scan data. Coordinate ranging list sign-off with Gareth and Jordan. Liaise with Cameron Dawson on dashboard screenshots and data issues.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Sean</div><div style="font-size:11px;color:var(--ink-4)">Mac Mobile</div></td>
+        <td>Monitor Mac Mobile server stability and coordinate with Vodacom. Ensure new GCP app release goes out week of 20 April. Confirm merchandiser credentials and store routing are configured for pilot stores.</td>
+        <td><span class="due-chip">20 Apr</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- HOW TO USE -->
+  <div class="section-title">How the team should use this document</div>
+  <div class="brief-card">
+    <p><strong>In every team meeting:</strong> Open this document as the shared screen. When a problem is raised, navigate to the step it belongs to and check the gap. Assign the action to the named owner on the spot.</p>
+    <p><strong>When a gap is resolved:</strong> Notify Gareth so the document can be updated. A gap is only resolved when the data is confirmed clean — not when an action has been taken.</p>
+    <p><strong>The three things that must happen by 17 April</strong> for the pilot to proceed: (1) Ranging lists finalised and loaded into Keystone for all pilot stores. (2) Product catalog cleaned and signed off by Tina and Toby. (3) Jordan's example API response with category-level structure shared with the team for review.</p>
+    <p><strong>Remember:</strong> Every gap in this flow has a direct effect on what the merchandiser sees in the app. A bad ranging list means missing principals. A dirty catalog means missed products. A broken API structure means the compliance screen shows nothing useful. The merchandiser experience is the measure of whether we've solved it.</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  CA&amp;S Digital · IR Project · Last updated 15 April 2026 · Gareth Paterson
+</div>
+
+<!-- GAP MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeGap(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <span class="modal-close" onclick="closeGap(null)">✕ close</span>
+    <div class="modal-gap-id" id="modal-id"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-owner" id="modal-owner"></div>
+  </div>
+</div>
+</div>
+
+<!-- PANEL: PROCESS FLOW -->
+<div class="ir-panel" id="panel-flow">
+<div class="card">
+  <h1>IR Project — End-to-End Process Flow</h1>
+  <p class="sub">CA&S Digital · Updated 15 April 2026 · Includes confirmed metadata packaging step (8b)</p>
+  <div class="legend">
+    <div class="leg"><div class="ls" style="background:#E1F5EE;border:1px solid #0F6E56"></div> Mac Mobile</div>
+    <div class="leg"><div class="ls" style="background:#E6F1FB;border:1px solid #185FA5"></div> Neurolabs</div>
+    <div class="leg"><div class="ls" style="background:#EEEDFE;border:1px solid #534AB7"></div> Keystone</div>
+    <div class="leg"><div class="ls" style="background:#FAEEDA;border:1px solid #854F0B"></div> Pack &amp; Stack</div>
+    <div class="leg"><div class="ls" style="background:#FCEBEB;border:1px solid #A32D2D;border-style:dashed"></div> Known gap</div>
+    <div class="leg"><div class="ls" style="background:#E1F5EE;border:2px solid #0F6E56"></div> New step (15 Apr)</div>
+  </div>
+
+<svg width="100%" viewBox="0 0 700 1980" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>IR Project End-to-End Process Flow — Updated 15 April 2026</title>
+<desc>Process flow updated to include new metadata packaging step where Mac Mobile adds store context before sending to Keystone.</desc>
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round"/>
+  </marker>
+  <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/>
+  </marker>
+  <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/>
+  </marker>
+  <marker id="arr-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
+  </marker>
+  <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round"/>
+  </marker>
+</defs>
+
+<!-- ===== PHASE LABELS ===== -->
+<text x="18" y="100" font-size="9" font-weight="700" fill="#0F6E56" text-anchor="middle" transform="rotate(-90,18,100)" letter-spacing="1">FIELD</text>
+<text x="18" y="360" font-size="9" font-weight="700" fill="#185FA5" text-anchor="middle" transform="rotate(-90,18,360)" letter-spacing="1">CAPTURE</text>
+<text x="18" y="640" font-size="9" font-weight="700" fill="#185FA5" text-anchor="middle" transform="rotate(-90,18,640)" letter-spacing="1">AI</text>
+<text x="18" y="900" font-size="9" font-weight="700" fill="#0F6E56" text-anchor="middle" transform="rotate(-90,18,900)" letter-spacing="1">METADATA</text>
+<text x="18" y="1200" font-size="9" font-weight="700" fill="#534AB7" text-anchor="middle" transform="rotate(-90,18,1200)" letter-spacing="1">TRANSFORM</text>
+<text x="18" y="1560" font-size="9" font-weight="700" fill="#534AB7" text-anchor="middle" transform="rotate(-90,18,1560)" letter-spacing="1">DELIVERY</text>
+<text x="18" y="1800" font-size="9" font-weight="700" fill="#888780" text-anchor="middle" transform="rotate(-90,18,1800)" letter-spacing="1">FEEDBACK</text>
+
+<!-- phase dividers -->
+<line x1="36" y1="56" x2="36" y2="200" stroke="#D3D1C7" stroke-width="0.5"/>
+<line x1="36" y1="220" x2="36" y2="510" stroke="#B5D4F4" stroke-width="0.5"/>
+<line x1="36" y1="530" x2="36" y2="790" stroke="#B5D4F4" stroke-width="0.5"/>
+<line x1="36" y1="810" x2="36" y2="1000" stroke="#9FE1CB" stroke-width="2"/>
+<line x1="36" y1="1020" x2="36" y2="1420" stroke="#AFA9EC" stroke-width="0.5"/>
+<line x1="36" y1="1440" x2="36" y2="1660" stroke="#AFA9EC" stroke-width="0.5"/>
+<line x1="36" y1="1680" x2="36" y2="1940" stroke="#D3D1C7" stroke-width="0.5"/>
+
+<!-- ===== PHASE 1: FIELD ===== -->
+<rect x="44" y="60" width="244" height="50" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="81" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">1. Merchandiser logs in</text>
+<text x="166" y="97" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Opens Mac Mobile app at store</text>
+
+<line x1="166" y1="110" x2="166" y2="130" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="44" y="130" width="244" height="50" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="151" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">2. App loads store context</text>
+<text x="166" y="167" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Store ID assigned, categories loaded</text>
+
+<line x1="166" y1="180" x2="166" y2="200" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="44" y="200" width="244" height="50" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="221" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">3. Category form opens</text>
+<text x="166" y="237" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Retailer-specific principals shown</text>
+<!-- GAP 1 -->
+<rect x="302" y="200" width="150" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="218" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 1</text>
+<text x="377" y="232" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Ranging list incomplete</text>
+<text x="377" y="244" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">+ retailer mismatch</text>
+<line x1="302" y1="225" x2="292" y2="225" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<!-- ===== PHASE 2: CAPTURE ===== -->
+<line x1="166" y1="250" x2="166" y2="270" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="196" y="262" font-size="9" fill="#888780" text-anchor="middle">in-aisle</text>
+
+<rect x="44" y="270" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="291" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">4. Takes photo of shelf</text>
+<text x="166" y="307" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">In-aisle, specific category</text>
+<!-- GAP 2 -->
+<rect x="302" y="270" width="150" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="288" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 2</text>
+<text x="377" y="304" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Image quality 42% error</text>
+<line x1="302" y1="295" x2="292" y2="295" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<line x1="166" y1="320" x2="166" y2="340" stroke="#185FA5" stroke-width="1" marker-end="url(#arr-blue)"/>
+
+<rect x="44" y="340" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="361" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">5. App validates image</text>
+<text x="166" y="377" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">GCP blur/tilt rejection (20 Apr)</text>
+
+<line x1="166" y1="390" x2="166" y2="410" stroke="#185FA5" stroke-width="1" marker-end="url(#arr-blue)"/>
+
+<rect x="44" y="410" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="431" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">6. Image uploaded to Neurolabs</text>
+<text x="166" y="447" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Via Mac Mobile / Vodacom servers</text>
+<!-- GAP 3 -->
+<rect x="302" y="410" width="150" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="428" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 3</text>
+<text x="377" y="444" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Server instability</text>
+<line x1="302" y1="435" x2="292" y2="435" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<!-- cross-system hand-off -->
+<line x1="166" y1="460" x2="166" y2="490" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="196" y="477" font-size="9" fill="#888780" text-anchor="middle">to Neurolabs</text>
+
+<!-- ===== PHASE 3: AI ===== -->
+<rect x="44" y="490" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="511" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">7. AI image recognition runs</text>
+<text x="166" y="527" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Detects products on shelf</text>
+
+<line x1="166" y1="540" x2="166" y2="560" stroke="#185FA5" stroke-width="1" marker-end="url(#arr-blue)"/>
+
+<rect x="44" y="560" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="581" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">8. Match products to catalog</text>
+<text x="166" y="597" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Barcode + operational category</text>
+<!-- GAP 4 -->
+<rect x="302" y="560" width="150" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="578" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 4</text>
+<text x="377" y="594" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Catalog not clean</text>
+<line x1="302" y1="585" x2="292" y2="585" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<line x1="166" y1="610" x2="166" y2="640" stroke="#185FA5" stroke-width="1" marker-end="url(#arr-blue)"/>
+<text x="250" y="627" font-size="9" fill="#185FA5" text-anchor="middle" font-weight="600">back to Mac Mobile</text>
+
+<!-- ===== STEP 8a ===== -->
+<rect x="44" y="640" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="658" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">8a. Results back to Mac Mobile</text>
+<text x="166" y="674" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">SKU + confidence scores returned</text>
+
+<!-- UPDATED badge -->
+<rect x="460" y="640" width="80" height="18" rx="9" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+<text x="500" y="649" font-size="9" font-weight="700" fill="#085041" text-anchor="middle" dominant-baseline="central">CONFIRMED</text>
+
+<line x1="166" y1="690" x2="166" y2="720" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#arr-green)"/>
+<text x="250" y="707" font-size="9" fill="#0F6E56" text-anchor="middle" font-weight="600">metadata added</text>
+
+<!-- ===== STEP 8b — NEW ===== -->
+<rect x="44" y="720" width="244" height="66" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="2"/>
+<text x="166" y="740" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">8b. Mac Mobile adds metadata</text>
+<text x="166" y="756" font-size="10" fill="#085041" text-anchor="middle" dominant-baseline="central">Store ID · Rep · Form/Category</text>
+<text x="166" y="770" font-size="10" fill="#085041" text-anchor="middle" dominant-baseline="central">Principal → sends enriched JSON to Keystone</text>
+<!-- GAP 8 -->
+<rect x="302" y="720" width="150" height="66" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="742" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 8</text>
+<text x="377" y="758" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Duplicate store IDs</text>
+<text x="377" y="772" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">(old PnS vs AIS system)</text>
+<line x1="302" y1="753" x2="292" y2="753" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<!-- NEW STEP badge -->
+<rect x="460" y="726" width="60" height="18" rx="9" fill="#0F6E56"/>
+<text x="490" y="735" font-size="9" font-weight="700" fill="white" text-anchor="middle" dominant-baseline="central">NEW</text>
+
+<!-- cross-system to Keystone -->
+<line x1="166" y1="786" x2="166" y2="820" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="208" y="805" font-size="9" fill="#888780" text-anchor="middle">to Keystone</text>
+
+<!-- Pack & Stack ranging input -->
+<rect x="460" y="860" width="160" height="50" rx="7" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text x="540" y="881" font-size="12" font-weight="600" fill="#633806" text-anchor="middle" dominant-baseline="central">Pack &amp; Stack</text>
+<text x="540" y="897" font-size="10" fill="#854F0B" text-anchor="middle" dominant-baseline="central">Ranging lists per store</text>
+<!-- GAP 5 -->
+<rect x="460" y="920" width="160" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="540" y="938" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 5</text>
+<text x="540" y="954" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Partial coverage</text>
+<line x1="460" y1="885" x2="294" y2="885" stroke="#854F0B" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+
+<!-- ===== PHASE 5: TRANSFORM ===== -->
+<rect x="44" y="820" width="244" height="50" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="841" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">9. Keystone receives request</text>
+<text x="166" y="857" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Checks ranging list for this store</text>
+
+<line x1="166" y1="870" x2="166" y2="900" stroke="#534AB7" stroke-width="1" marker-end="url(#arr-purple)"/>
+
+<rect x="44" y="900" width="244" height="50" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="918" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">10. Cross-ref vs ranging list</text>
+<text x="166" y="934" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">On-shelf vs what should be there</text>
+<!-- GAP 6 -->
+<rect x="302" y="900" width="150" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="918" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 6</text>
+<text x="377" y="934" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Category mapping misaligned</text>
+<line x1="302" y1="925" x2="292" y2="925" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<line x1="166" y1="950" x2="166" y2="980" stroke="#534AB7" stroke-width="1" marker-end="url(#arr-purple)"/>
+
+<rect x="44" y="980" width="244" height="50" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="998" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">11. Build action output</text>
+<text x="166" y="1014" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Category → Principal → Items</text>
+<!-- GAP 7 -->
+<rect x="302" y="980" width="150" height="50" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="998" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 7</text>
+<text x="377" y="1014" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">No category in API response</text>
+<line x1="302" y1="1005" x2="292" y2="1005" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr-red)"/>
+
+<!-- cross-system back to Mac -->
+<line x1="166" y1="1030" x2="166" y2="1060" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="212" y="1047" font-size="9" fill="#888780" text-anchor="middle">API response</text>
+
+<!-- ===== PHASE 6: DELIVERY ===== -->
+<rect x="44" y="1060" width="244" height="50" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="1078" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">12. Keystone → Mac Mobile</text>
+<text x="166" y="1094" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Structured JSON response</text>
+
+<line x1="166" y1="1110" x2="166" y2="1140" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="44" y="1140" width="244" height="50" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="1158" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">13. App shows what to action</text>
+<text x="166" y="1174" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Merchandiser sees fix list</text>
+
+<!-- ===== PHASE 7: FEEDBACK ===== -->
+<line x1="166" y1="1190" x2="166" y2="1220" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="44" y="1220" width="244" height="50" rx="7" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<text x="166" y="1238" font-size="12" font-weight="600" fill="#2C2C2A" text-anchor="middle" dominant-baseline="central">14. Merchandiser takes action</text>
+<text x="166" y="1254" font-size="10" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">Restocks, fixes compliance issues</text>
+
+<line x1="166" y1="1270" x2="166" y2="1300" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="44" y="1300" width="244" height="50" rx="7" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<text x="166" y="1318" font-size="12" font-weight="600" fill="#2C2C2A" text-anchor="middle" dominant-baseline="central">15. Closes the form</text>
+<text x="166" y="1334" font-size="10" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">Submits, records visit</text>
+
+<line x1="166" y1="1350" x2="166" y2="1380" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="44" y="1380" width="244" height="50" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="1398" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">16. Dashboard reporting</text>
+<text x="166" y="1414" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">OSA, compliance, KeyDash 2.0</text>
+
+<!-- reporting loop -->
+<path d="M44 1405 L28 1405 L28 225 L44 225" fill="none" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="22" y="820" font-size="8" fill="#B4B2A9" text-anchor="middle" transform="rotate(-90,22,820)">reporting loop</text>
+
+<!-- footer -->
+<text x="350" y="1460" font-size="9" fill="#9CA0AB" text-anchor="middle">CA&amp;S Digital · IR Project · Process flow updated 15 April 2026 · Confirmed by Jordan Kirkbride</text>
+
+</svg>
+</div>
+</div>
+
+<div class="ir-panel" id="panel-gantt">
+<div id="gantt-app"></div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+function showTab(name, btn) {
+  document.querySelectorAll('.ir-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ir-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+
+<!-- BRIEF SCRIPTS -->
+<script>
+
+const gaps = {
+  1: {
+    id: "GAP 1",
+    title: "Ranging list incomplete and retailer-specific",
+    body: "The principal list shown in the app is not complete. Not all principals flow through for all stores. Confirmed from Jordan's call (15 Apr): Diplomat data only exists for PnP — not Checkers. Cerebos and Diplomat are not available from the Checkers data at all. 5 principals currently available for Checkers (3M, Helion, Permark, Surf Roots, GQ Tissue), with more coverage on PnP side. The app form must be retailer-specific — a Checkers store should only show principals with Checkers ranging data, otherwise merchandisers photograph shelves that return zero results every time.",
+    owner: "Owner: Gareth / Jordan / Camelle · Deadline: 17 April 2026"
+  },
+  2: {
+    id: "GAP 2",
+    title: "Image quality degradation",
+    body: "Error rate has jumped from 10% to 42%. Causes include lower-quality handsets, store lighting and flash, and small reflective packaging that the AI struggles with. Fix: new GCP app (releasing week of 20 April) adds blur and tilt rejection, automatically rejecting poor images before they are sent to Neurolabs.",
+    owner: "Owner: Mac Mobile / Neurolabs · Fix due: Week of 20 April"
+  },
+  3: {
+    id: "GAP 3",
+    title: "Mac Mobile server instability",
+    body: "Vodacom-hosted Mac Mobile servers are experiencing outages. Images are captured in the field but never reach Neurolabs — the merchandiser waits in the aisle with no result. Sean's team is monitoring. This is ongoing.",
+    owner: "Owner: Sean / Mac Mobile · Status: Ongoing monitoring"
+  },
+  4: {
+    id: "GAP 4",
+    title: "Neurolabs catalog not clean",
+    body: "The product catalog in Neurolabs has duplicates, missing barcodes, and misaligned operational categories. This causes incorrect or zero product matches — products are on the photo but do not appear in the results. Fix: Tina is leading cleanup once Toby provides the full export with barcode and operational category data.",
+    owner: "Owner: Toby / Tina / Cameron Dawson · Fix: Toby to send export ASAP"
+  },
+  5: {
+    id: "GAP 5",
+    title: "Ranging list partial coverage",
+    body: "Only some principals appear in the ranging lists fed to Keystone. If a product is detected by Neurolabs but has no entry in the ranging list for that store, Keystone has no expected baseline — and cannot calculate compliance. Root cause: POS data from Pack & Stack is not complete for all principals.",
+    owner: "Owner: Camelle / Jordan / Gareth · Senior sign-off: Ruan · Deadline: 17 April 2026"
+  },
+  6: {
+    id: "GAP 6",
+    title: "Category mapping misaligned",
+    body: "Operational categories in Mac Mobile do not map cleanly to Neurolabs or Keystone. This has been an unresolved issue for months. Without aligned categories, Keystone cannot correctly group and compare detected products against the ranging list. Fix: Tina is coordinating alignment. Jordan will prepare an example API response once the SKU-to-category mapping is confirmed.",
+    owner: "Owner: Cameron Dawson / Jordan / Tina · Status: Months unresolved — escalate"
+  },
+  7: {
+    id: "GAP 7",
+    title: "API response lacks category structure",
+    body: "Keystone's API currently filters at store and principal level only. The app needs the response structured as Category > Principal > Items for the merchandiser to see actionable instructions. Jordan is building an example response this week — but this is blocked by GAP 6 being resolved first. Until this is fixed, step 13 (merchandiser sees what to action) cannot work correctly.",
+    owner: "Owner: Jordan / Keystone · Blocked by: GAP 6"
+  },
+  8: {
+    id: "GAP 8",
+    title: "Duplicate store IDs in Mac Mobile data",
+    body: "Many stores have two customer IDs — one from the old Pack & Stack system, one from the new AIS system. For example, Checkers Claremont appears twice with different IDs. Jordan has created double ranging list entries as a temporary workaround so both IDs get processed. However this creates duplicate data, wastes space, and is not a sustainable state. The old IDs need to be identified and removed from Mac Mobile's system. Owner: Jordan to compile a list of duplicate IDs; Mac Mobile and Pack & Stack to clean from their systems.",
+    owner: "Owner: Jordan / Mac Mobile / Pack & Stack · Status: Workaround in place — cleanup needed"
+  }
+};
+
+function openGap(n) {
+  const g = gaps[n];
+  document.getElementById('modal-id').textContent = g.id;
+  document.getElementById('modal-title').textContent = g.title;
+  document.getElementById('modal-body').textContent = g.body;
+  document.getElementById('modal-owner').textContent = g.owner;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeGap(e) {
+  if (!e || e.target === document.getElementById('modal-bg')) {
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('modal-bg').classList.remove('open');
+});
+
+</script>
+
+<!-- GANTT SCRIPTS -->
+<script>
+
+/* ===== GANTT REBUILD ===== */
+(function(){
+
+const TASKS = [
+  // Phase 1 — Data & Ranging
+  {id:1,  phase:0, name:"Finalise Checkers ranging list",               start:"2026-04-15", end:"2026-04-17", owner:"Gareth / Jordan / Camelle",       team:"ps",  status:"progress"},
+  {id:2,  phase:0, name:"Finalise PnP ranging list",                    start:"2026-04-15", end:"2026-04-17", owner:"Gareth / Jordan / Camelle",       team:"ps",  status:"progress"},
+  {id:3,  phase:0, name:"Validate all 9 principals per store",           start:"2026-04-15", end:"2026-04-17", owner:"Cameron Dawson / Jordan",         team:"key", status:"open"},
+  {id:4,  phase:0, name:"Confirm pilot store scope — Checkers & PnP",   start:"2026-04-14", end:"2026-04-17", owner:"Gareth",                          team:"cas", status:"progress"},
+  {id:5,  phase:0, name:"Send ranging lists to team for validation",     start:"2026-04-15", end:"2026-04-17", owner:"Jordan",                          team:"key", status:"open"},
+  {id:6,  phase:0, name:"Green-light sign-off on ranging docs",          start:"2026-04-16", end:"2026-04-17", owner:"Camelle / Morne",                 team:"ps",  status:"open"},
+  // Phase 2 — Catalog & Image Quality
+  {id:7,  phase:1, name:"Toby provides full barcode + category export",  start:"2026-04-15", end:"2026-04-18", owner:"Toby",                            team:"nlb", status:"open"},
+  {id:8,  phase:1, name:"Product catalog cleanup in Optimise",           start:"2026-04-17", end:"2026-04-22", owner:"Tina / Camelle",                  team:"ps",  status:"open"},
+  {id:9,  phase:1, name:"Mac Mobile catalog sync with Neurolabs",        start:"2026-04-20", end:"2026-04-24", owner:"Christo / Cameron Dawson",        team:"mac", status:"open"},
+  {id:10, phase:1, name:"New GCP app release — image quality fix",       start:"2026-04-20", end:"2026-04-24", owner:"Christo / Sean",                  team:"mac", status:"open"},
+  {id:11, phase:1, name:"Accuracy validation by catalog managers",       start:"2026-04-20", end:"2026-04-25", owner:"Toby",                            team:"nlb", status:"open"},
+  {id:12, phase:1, name:"Category mapping alignment",                    start:"2026-04-17", end:"2026-04-24", owner:"Tina / Jordan / Cameron Dawson",  team:"all", status:"blocked"},
+  {id:29, phase:1, name:"Compile list of duplicate store IDs",           start:"2026-04-15", end:"2026-04-20", owner:"Jordan",                          team:"key", status:"open"},
+  {id:30, phase:1, name:"Clean duplicate store IDs from Mac Mobile",     start:"2026-04-20", end:"2026-04-30", owner:"Christo / Pack & Stack",          team:"mac", status:"open"},
+  // Phase 3 — API & Integration
+  {id:13, phase:2, name:"SKU-to-category mapping confirmed",             start:"2026-04-17", end:"2026-04-18", owner:"Tina / Toby",                     team:"all", status:"open"},
+  {id:31, phase:2, name:"Confirm Mac Mobile metadata fields to Keystone",start:"2026-04-15", end:"2026-04-20", owner:"Christo / Jordan",                team:"mac", status:"open"},
+  {id:14, phase:2, name:"Jordan builds category-level API response",     start:"2026-04-18", end:"2026-04-22", owner:"Jordan",                          team:"key", status:"open"},
+  {id:15, phase:2, name:"Keystone API: Category > Principal > Items",    start:"2026-04-22", end:"2026-04-28", owner:"Jordan / Cameron Dawson",         team:"key", status:"open"},
+  {id:16, phase:2, name:"Mac Mobile renders category-level results",     start:"2026-04-24", end:"2026-04-30", owner:"Christo / JH",                    team:"mac", status:"open"},
+  {id:17, phase:2, name:"Haleon article master data review",             start:"2026-04-15", end:"2026-04-18", owner:"Jordan / Luke",                   team:"key", status:"open"},
+  // Phase 4 — Testing & Reporting
+  {id:18, phase:3, name:"KeyDash 2.0 tutorial",                          start:"2026-04-24", end:"2026-04-24", owner:"Jordan / Gareth",                 team:"key", status:"open"},
+  {id:19, phase:3, name:"End-to-end test — Checkers stores",             start:"2026-04-25", end:"2026-05-09", owner:"Gareth / Camelle / Sean",         team:"all", status:"open"},
+  {id:20, phase:3, name:"End-to-end test — PnP stores",                  start:"2026-04-25", end:"2026-05-09", owner:"Gareth / Camelle / Sean",         team:"all", status:"open"},
+  {id:21, phase:3, name:"Reporting build — principal-level dashboard",   start:"2026-04-24", end:"2026-05-08", owner:"JH / Sean",                       team:"mac", status:"open"},
+  {id:22, phase:3, name:"Chinese wall principle split",                   start:"2026-04-24", end:"2026-05-15", owner:"Christo / Cameron Dawson",        team:"all", status:"open"},
+  {id:23, phase:3, name:"Response time validation (target <10 min)",     start:"2026-05-01", end:"2026-05-15", owner:"Sean / Toby / Jordan",            team:"all", status:"open"},
+  // Phase 5 — Stress Test & Deploy
+  {id:24, phase:4, name:"Stress test prep — 1,452 stores",               start:"2026-05-01", end:"2026-06-01", owner:"All teams",                       team:"all", status:"open"},
+  {id:25, phase:4, name:"Device audit — 120 field ops managers",          start:"2026-05-01", end:"2026-06-01", owner:"Sean / Camelle",                  team:"all", status:"open"},
+  {id:26, phase:4, name:"Full stress test",                               start:"2026-06-01", end:"2026-06-30", owner:"All teams",                       team:"all", status:"open"},
+  {id:27, phase:4, name:"Issue resolution from stress test",              start:"2026-06-15", end:"2026-07-15", owner:"Gareth / All leads",              team:"all", status:"open"},
+  {id:28, phase:4, name:"Full deployment — volume ramp-up",               start:"2026-07-01", end:"2026-07-31", owner:"All teams",                       team:"all", status:"open"},
+];
+
+const PHASES = [
+  {label:"Phase 1 — Data & Ranging",         color:"#854F0B", bg:"#FAEEDA"},
+  {label:"Phase 2 — Catalog & Image Quality", color:"#185FA5", bg:"#E6F1FB"},
+  {label:"Phase 3 — API & Integration",       color:"#534AB7", bg:"#EEEDFE"},
+  {label:"Phase 4 — Testing & Reporting",     color:"#0F6E56", bg:"#E1F5EE"},
+  {label:"Phase 5 — Stress Test & Deploy",    color:"#444441", bg:"#F1EFE8"},
+];
+
+const STATUS_COLORS = {
+  done:    {bg:"#E1F5EE", text:"#085041", bar:"#1D9E75"},
+  progress:{bg:"#E6F1FB", text:"#0C447C", bar:"#185FA5"},
+  open:    {bg:"#FAEEDA", text:"#633806", bar:"#854F0B"},
+  blocked: {bg:"#FCEBEB", text:"#791F1F", bar:"#A32D2D"},
+};
+const STATUS_LABELS = {done:"Done", progress:"In progress", open:"Open", blocked:"Blocked"};
+const STATUS_CYCLE = ["open","progress","done","blocked"];
+
+const TEAM_COLORS = {
+  cas:{bg:"#F1EFE8",text:"#2C2C2A",label:"CA&S"},
+  mac:{bg:"#E1F5EE",text:"#085041",label:"Mac"},
+  nlb:{bg:"#E6F1FB",text:"#0C447C",label:"NLB"},
+  key:{bg:"#EEEDFE",text:"#3C3489",label:"Key"},
+  ps: {bg:"#FAEEDA",text:"#633806",label:"PnS"},
+  all:{bg:"#F1EFE8",text:"#444441",label:"All"},
+};
+
+// Timeline: Apr 1 to Jul 31 2026
+const T0 = new Date("2026-04-01").getTime();
+const T1 = new Date("2026-07-31").getTime();
+const TSPAN = T1 - T0;
+const TODAY = new Date("2026-04-15").getTime();
+
+function pct(dateStr) {
+  const d = new Date(dateStr).getTime();
+  return Math.max(0, Math.min(100, (d - T0) / TSPAN * 100));
+}
+function todayPct() { return (TODAY - T0) / TSPAN * 100; }
+
+let tasks = TASKS.map(t => ({...t}));
+let statusFilter = "all";
+let teamFilter = null;
+let dirty = false;
+let nextId = 100;
+
+function cycleStatus(id) {
+  const t = tasks.find(t=>t.id===id);
+  if (!t) return;
+  const i = STATUS_CYCLE.indexOf(t.status);
+  t.status = STATUS_CYCLE[(i+1)%STATUS_CYCLE.length];
+  markDirty(); render();
+}
+
+function updateField(id, field, val) {
+  const t = tasks.find(t=>t.id===id);
+  if (t) { t[field] = val; markDirty(); }
+}
+
+function deleteTask(id) {
+  if (!confirm("Remove this task?")) return;
+  tasks = tasks.filter(t=>t.id!==id);
+  markDirty(); render();
+}
+
+function markDirty() {
+  dirty = true;
+  document.getElementById("g-savebar").style.display = "flex";
+}
+
+function saveFile() {
+  const blob = new Blob([document.documentElement.outerHTML], {type:"text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "IR_Project_Hub.html";
+  a.click();
+  dirty = false;
+  document.getElementById("g-savebar").style.display = "none";
+}
+
+function addTask() {
+  const name = document.getElementById("g-new-name").value.trim();
+  if (!name) return;
+  tasks.push({
+    id: nextId++,
+    phase: parseInt(document.getElementById("g-new-phase").value),
+    name,
+    start: document.getElementById("g-new-start").value || "2026-04-15",
+    end:   document.getElementById("g-new-end").value   || "2026-04-30",
+    owner: document.getElementById("g-new-owner").value || "TBC",
+    team:  document.getElementById("g-new-team").value,
+    status:document.getElementById("g-new-status").value,
+  });
+  document.getElementById("g-add-modal").style.display = "none";
+  document.getElementById("g-new-name").value = "";
+  document.getElementById("g-new-owner").value = "";
+  markDirty(); render();
+}
+
+function render() {
+  const app = document.getElementById("gantt-app");
+  
+  const filtered = tasks.filter(t => {
+    const sm = statusFilter === "all" || t.status === statusFilter;
+    const tm = !teamFilter || t.team === teamFilter;
+    return sm && tm;
+  });
+
+  const total = tasks.length;
+  const done = tasks.filter(t=>t.status==="done").length;
+  const prog = tasks.filter(t=>t.status==="progress").length;
+  const open = tasks.filter(t=>t.status==="open").length;
+  const blkd = tasks.filter(t=>t.status==="blocked").length;
+
+  let html = `
+<div style="background:#0e1117;color:white;padding:24px 32px 20px">
+  <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:6px">CA&S Digital · IR Project</div>
+  <div style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px">Project Gantt</div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.45);font-weight:300">Apr 2026 — Jul 2026 · Click status to cycle · Click task name to edit</div>
+  <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+    <div style="background:rgba(255,255,255,0.07);border-radius:8px;padding:10px 16px;text-align:center;min-width:70px">
+      <div style="font-size:22px;font-weight:600">${total}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:.06em;text-transform:uppercase">Tasks</div>
+    </div>
+    <div style="background:rgba(29,158,117,0.15);border-radius:8px;padding:10px 16px;text-align:center;min-width:70px">
+      <div style="font-size:22px;font-weight:600;color:#5DCAA5">${done}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(93,202,165,0.6);letter-spacing:.06em;text-transform:uppercase">Done</div>
+    </div>
+    <div style="background:rgba(24,95,165,0.2);border-radius:8px;padding:10px 16px;text-align:center;min-width:70px">
+      <div style="font-size:22px;font-weight:600;color:#7EB8F5">${prog}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(126,184,245,0.6);letter-spacing:.06em;text-transform:uppercase">Active</div>
+    </div>
+    <div style="background:rgba(133,79,11,0.2);border-radius:8px;padding:10px 16px;text-align:center;min-width:70px">
+      <div style="font-size:22px;font-weight:600;color:#FAC775">${open}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(250,199,117,0.6);letter-spacing:.06em;text-transform:uppercase">Open</div>
+    </div>
+    <div style="background:rgba(163,45,45,0.2);border-radius:8px;padding:10px 16px;text-align:center;min-width:70px">
+      <div style="font-size:22px;font-weight:600;color:#F09595">${blkd}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(240,149,149,0.6);letter-spacing:.06em;text-transform:uppercase">Blocked</div>
+    </div>
+    <button onclick="document.getElementById('g-add-modal').style.display='flex'" style="margin-left:auto;background:white;color:#0e1117;border:none;border-radius:8px;padding:10px 18px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">+ Add task</button>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div style="background:white;border-bottom:1px solid rgba(14,17,23,0.09);padding:10px 32px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+  <span style="font-family:'DM Mono',monospace;font-size:10px;color:#9ca0ab;letter-spacing:.06em;text-transform:uppercase;margin-right:4px">Status</span>
+  ${["all","open","progress","blocked","done"].map(s=>`<button onclick="statusFilter='${s}';render()" style="font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid ${statusFilter===s?'#0e1117':'rgba(14,17,23,0.15)'};background:${statusFilter===s?'#0e1117':'white'};color:${statusFilter===s?'white':'#6b6f7a'};cursor:pointer;font-family:'DM Sans',sans-serif">${s==='all'?'All':STATUS_LABELS[s]}</button>`).join('')}
+  <span style="width:1px;height:20px;background:rgba(14,17,23,0.1);margin:0 4px"></span>
+  <span style="font-family:'DM Mono',monospace;font-size:10px;color:#9ca0ab;letter-spacing:.06em;text-transform:uppercase;margin-right:4px">Team</span>
+  ${Object.entries(TEAM_COLORS).map(([k,v])=>`<button onclick="teamFilter=teamFilter==='${k}'?null:'${k}';render()" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid ${teamFilter===k?v.text:'rgba(14,17,23,0.15)'};background:${teamFilter===k?v.bg:'white'};color:${teamFilter===k?v.text:'#6b6f7a'};cursor:pointer;font-family:'DM Sans',sans-serif">${v.label}</button>`).join('')}
+</div>`;
+
+  // Render each phase
+  PHASES.forEach((phase, pi) => {
+    const pTasks = filtered.filter(t=>t.phase===pi);
+    if (!pTasks.length) return;
+
+    html += `
+<div style="margin:0;padding:0">
+  <!-- Phase header -->
+  <div style="display:flex;align-items:center;gap:10px;padding:16px 32px 8px;background:#f5f4f0;border-bottom:1px solid rgba(14,17,23,0.08)">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;font-weight:500;width:20px;height:20px;border-radius:50%;background:${phase.color};color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0">${pi+1}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:${phase.color}">${phase.label}</div>
+    <div style="flex:1;height:1px;background:rgba(14,17,23,0.1)"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:#9ca0ab">${pTasks.length} tasks</div>
+  </div>
+
+  <!-- Month header -->
+  <div style="display:grid;grid-template-columns:300px 90px 110px 1fr;background:#f5f4f0;border-bottom:1px solid rgba(14,17,23,0.1)">
+    <div style="padding:6px 16px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab">Task</div>
+    <div style="padding:6px 8px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab">Status</div>
+    <div style="padding:6px 8px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab">Owner</div>
+    <div style="padding:6px 8px;position:relative">
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:#9ca0ab">
+        <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+      </div>
+    </div>
+  </div>`;
+
+    pTasks.forEach(t => {
+      const sc = STATUS_COLORS[t.status] || STATUS_COLORS.open;
+      const tc = TEAM_COLORS[t.team] || TEAM_COLORS.all;
+      const startP = pct(t.start);
+      const endP = pct(t.end);
+      const barW = Math.max(0.5, endP - startP);
+      const tdP = todayPct();
+      const overdue = new Date(t.end) < new Date("2026-04-15") && t.status !== "done";
+
+      html += `
+  <div style="display:grid;grid-template-columns:300px 90px 110px 1fr;border-bottom:1px solid rgba(14,17,23,0.06);background:white;transition:background .1s" onmouseover="this.style.background='#faf9f7'" onmouseout="this.style.background='white'">
+    
+    <!-- Task name -->
+    <div style="padding:10px 16px;display:flex;align-items:center;gap:8px;min-width:0">
+      <span style="font-size:9px;font-weight:500;padding:2px 6px;border-radius:10px;background:${tc.bg};color:${tc.text};flex-shrink:0;font-family:'DM Mono',monospace">${tc.label}</span>
+      <input value="${t.name.replace(/"/g,'&quot;')}" onchange="updateField(${t.id},'name',this.value)" style="font-size:12px;font-weight:500;color:#0e1117;border:none;background:transparent;outline:none;width:100%;font-family:'DM Sans',sans-serif;cursor:pointer" title="${t.name}">
+      <button onclick="deleteTask(${t.id})" style="opacity:0;font-size:14px;color:#9ca0ab;border:none;background:none;cursor:pointer;flex-shrink:0;padding:0 2px" onmouseover="this.style.opacity='1';this.style.color='#A32D2D'" onmouseout="this.style.opacity='0'" class="del-x">×</button>
+    </div>
+
+    <!-- Status -->
+    <div style="padding:10px 8px;display:flex;align-items:center">
+      <button onclick="cycleStatus(${t.id})" style="font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;border:none;background:${sc.bg};color:${sc.text};cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">${STATUS_LABELS[t.status]}</button>
+    </div>
+
+    <!-- Owner -->
+    <div style="padding:10px 8px;display:flex;align-items:center;overflow:hidden">
+      <input value="${t.owner}" onchange="updateField(${t.id},'owner',this.value)" style="font-size:11px;color:#6b6f7a;border:none;background:transparent;outline:none;width:100%;font-family:'DM Mono',monospace;cursor:pointer" title="${t.owner}">
+    </div>
+
+    <!-- Bar -->
+    <div style="padding:10px 8px;display:flex;align-items:center;position:relative;min-width:0">
+      <div style="position:relative;width:100%;height:14px;background:#f0efea;border-radius:20px;overflow:visible">
+        <!-- bar -->
+        <div style="position:absolute;left:${startP}%;width:${barW}%;height:100%;background:${sc.bar};border-radius:20px;opacity:0.85"></div>
+        <!-- today marker -->
+        <div style="position:absolute;left:${tdP}%;top:-3px;width:2px;height:20px;background:#A32D2D;border-radius:2px;z-index:2"></div>
+        <!-- date labels -->
+        <div style="position:absolute;left:${startP}%;top:17px;font-family:'DM Mono',monospace;font-size:8px;color:#9ca0ab;white-space:nowrap">${t.start.slice(5).replace('-','/')}</div>
+      </div>
+    </div>
+  </div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  // Footer
+  html += `
+<div style="padding:32px;background:white;border-top:1px solid rgba(14,17,23,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div style="font-family:'DM Mono',monospace;font-size:10px;color:#9ca0ab">CA&S Digital · IR Project · Apr–Jul 2026 · <span style="color:#A32D2D">▏</span> = Today 15 Apr</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    ${Object.entries(STATUS_COLORS).map(([k,v])=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#6b6f7a"><div style="width:10px;height:10px;border-radius:50%;background:${v.bar}"></div>${STATUS_LABELS[k]}</div>`).join('')}
+  </div>
+</div>
+
+<!-- Add task modal -->
+<div id="g-add-modal" style="display:none;position:fixed;inset:0;background:rgba(14,17,23,0.45);z-index:999;align-items:center;justify-content:center;padding:24px" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:14px;padding:24px;max-width:420px;width:100%;box-shadow:0 16px 48px rgba(14,17,23,0.2)">
+    <div style="font-size:15px;font-weight:500;margin-bottom:16px;color:#0e1117">Add new task</div>
+    ${[
+      ["Task name","g-new-name","text","e.g. Finalise Checkers ranging list"],
+      ["Owner","g-new-owner","text","e.g. Jordan"],
+      ["Start date","g-new-start","date",""],
+      ["Due date","g-new-end","date",""],
+    ].map(([label,id,type,ph])=>`
+    <div style="margin-bottom:12px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab;margin-bottom:5px">${label}</div>
+      <input id="${id}" type="${type}" placeholder="${ph}" style="width:100%;padding:8px 10px;border:1px solid rgba(14,17,23,0.15);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+    </div>`).join('')}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab;margin-bottom:5px">Phase</div>
+        <select id="g-new-phase" style="width:100%;padding:8px 10px;border:1px solid rgba(14,17,23,0.15);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none">
+          <option value="0">Phase 1 — Data & Ranging</option>
+          <option value="1">Phase 2 — Catalog</option>
+          <option value="2">Phase 3 — API</option>
+          <option value="3">Phase 4 — Testing</option>
+          <option value="4">Phase 5 — Deploy</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab;margin-bottom:5px">Team</div>
+        <select id="g-new-team" style="width:100%;padding:8px 10px;border:1px solid rgba(14,17,23,0.15);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none">
+          <option value="cas">CA&S Digital</option>
+          <option value="mac">Mac Mobile</option>
+          <option value="key">Keystone</option>
+          <option value="nlb">Neurolabs</option>
+          <option value="ps">Pack & Stack</option>
+          <option value="all">All teams</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9ca0ab;margin-bottom:5px">Status</div>
+      <select id="g-new-status" style="width:100%;padding:8px 10px;border:1px solid rgba(14,17,23,0.15);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none">
+        <option value="open">Open</option>
+        <option value="progress">In progress</option>
+        <option value="done">Done</option>
+        <option value="blocked">Blocked</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="document.getElementById('g-add-modal').style.display='none'" style="font-size:12px;padding:8px 16px;border-radius:20px;border:1px solid rgba(14,17,23,0.15);background:white;color:#6b6f7a;cursor:pointer;font-family:'DM Sans',sans-serif">Cancel</button>
+      <button onclick="addTask()" style="font-size:12px;padding:8px 16px;border-radius:20px;border:none;background:#0e1117;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500">Add task</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save bar -->
+<div id="g-savebar" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0e1117;color:white;padding:12px 20px;border-radius:30px;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(14,17,23,0.3);z-index:998;font-size:13px;font-family:'DM Sans',sans-serif">
+  <span>Unsaved changes</span>
+  <button onclick="saveFile()" style="font-size:12px;font-weight:500;padding:6px 16px;border-radius:20px;border:none;background:white;color:#0e1117;cursor:pointer;font-family:'DM Sans',sans-serif">Download updated file</button>
+  <button onclick="document.getElementById('g-savebar').style.display='none';dirty=false;" style="font-size:12px;padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;font-family:'DM Sans',sans-serif">Discard</button>
+</div>`;
+
+  app.innerHTML = html;
+}
+
+// Init
+render();
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('g-add-modal').style.display = 'none';
+});
+
+})();
+
+</script>
+
+</body>
+</html>
