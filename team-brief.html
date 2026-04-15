@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IR Project — End-to-End Process Flow | CA&S Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e1117;
+  --ink-2: #3a3d45;
+  --ink-3: #6b6f7a;
+  --ink-4: #9ca0ab;
+  --surface: #f5f4f0;
+  --surface-2: #eceae4;
+  --surface-3: #ffffff;
+  --border: rgba(14,17,23,0.10);
+  --border-strong: rgba(14,17,23,0.18);
+
+  --mac: #0F6E56;
+  --mac-bg: #E1F5EE;
+  --mac-border: #9FE1CB;
+  --nlb: #185FA5;
+  --nlb-bg: #E6F1FB;
+  --nlb-border: #B5D4F4;
+  --key: #534AB7;
+  --key-bg: #EEEDFE;
+  --key-border: #AFA9EC;
+  --ps: #854F0B;
+  --ps-bg: #FAEEDA;
+  --ps-border: #FAC775;
+  --gap: #A32D2D;
+  --gap-bg: #FCEBEB;
+  --gap-border: #F7C1C1;
+
+  --r: 8px;
+  --r-lg: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ---- HEADER ---- */
+.header {
+  background: var(--ink);
+  color: white;
+  padding: 36px 40px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 30%;
+  width: 300px; height: 150px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.02);
+}
+.header-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.header-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.header-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 300;
+  max-width: 560px;
+}
+.header-meta {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.meta-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.meta-pill.urgent {
+  background: rgba(163,45,45,0.3);
+  color: #FFAAAA;
+  border-color: rgba(163,45,45,0.4);
+}
+
+/* ---- LAYOUT ---- */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+/* ---- SECTION TITLES ---- */
+.section-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---- BRIEF CARD ---- */
+.brief-card {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+.brief-card p {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.brief-card p:last-child { margin-bottom: 0; }
+.brief-card strong { color: var(--ink); font-weight: 500; }
+
+/* ---- DEADLINES ---- */
+.deadlines {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.deadline-item {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.deadline-item.urgent {
+  border-color: var(--gap-border);
+  background: var(--gap-bg);
+}
+.deadline-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+}
+.deadline-item.urgent .deadline-date { color: var(--gap); }
+.deadline-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.deadline-item.urgent .deadline-text { color: var(--gap); }
+.deadline-owner {
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+
+/* ---- LEGEND ---- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.leg-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ---- PHASE ---- */
+.phase {
+  margin-bottom: 8px;
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.phase-header:hover .phase-label-text { color: var(--ink); }
+.phase-number {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.phase-label-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color .15s;
+}
+.phase-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---- STEP ---- */
+.step {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+  margin-bottom: 6px;
+  border-left: 3px solid var(--border-strong);
+  transition: box-shadow .15s;
+}
+.step:hover { box-shadow: 0 2px 12px rgba(14,17,23,0.07); }
+.step.mac { border-left-color: var(--mac); }
+.step.nlb { border-left-color: var(--nlb); }
+.step.key { border-left-color: var(--key); }
+.step.ps  { border-left-color: var(--ps); }
+.step.multi { border-left-color: #888; }
+
+.step-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  flex: 1;
+}
+.step-sub {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+  padding-left: 24px;
+}
+.step-data {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.65;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+.step-data strong { color: var(--ink-2); font-weight: 500; }
+
+.step-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.badges { display: flex; gap: 5px; flex-wrap: wrap; }
+.badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: .02em;
+}
+.badge.mac { background: var(--mac-bg); color: var(--mac); border: 1px solid var(--mac-border); }
+.badge.nlb { background: var(--nlb-bg); color: var(--nlb); border: 1px solid var(--nlb-border); }
+.badge.key { background: var(--key-bg); color: var(--key); border: 1px solid var(--key-border); }
+.badge.ps  { background: var(--ps-bg);  color: var(--ps);  border: 1px solid var(--ps-border); }
+.badge.multi { background: var(--surface-2); color: var(--ink-3); border: 1px solid var(--border); }
+.owner-tag {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ---- GAP BUTTON ---- */
+.gap-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--gap-bg);
+  color: var(--gap);
+  border: 1px solid var(--gap-border);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background .12s;
+  white-space: nowrap;
+}
+.gap-btn:hover { background: var(--gap-border); }
+
+/* ---- ARROW ---- */
+.flow-arrow {
+  text-align: center;
+  color: var(--ink-4);
+  font-size: 18px;
+  line-height: 1;
+  margin: 2px 0;
+  padding-left: 18px;
+}
+
+/* ---- ACTIONS TABLE ---- */
+.actions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 32px;
+  font-size: 13px;
+}
+.actions-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-strong);
+}
+.actions-table th:first-child { border-radius: 8px 0 0 0; }
+.actions-table th:last-child { border-radius: 0 8px 0 0; }
+.actions-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--ink-2);
+  background: var(--surface-3);
+}
+.actions-table tr:last-child td { border-bottom: none; }
+.actions-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+.actions-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+.person-name {
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.due-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.due-chip.urgent {
+  background: var(--gap-bg);
+  color: var(--gap);
+}
+
+/* ---- MODAL ---- */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(14,17,23,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s;
+  padding: 24px;
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface-3);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 16px 48px rgba(14,17,23,0.2);
+  transform: translateY(8px);
+  transition: transform .15s;
+}
+.modal-bg.open .modal { transform: translateY(0); }
+.modal-gap-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--gap);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.modal-body {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.modal-owner {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.modal-close {
+  float: right;
+  font-size: 11px;
+  color: var(--ink-4);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.modal-close:hover { background: var(--surface-2); }
+
+/* ---- FOOTER ---- */
+.footer {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  padding: 32px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  .header { padding: 24px 20px 20px; }
+  .header-title { font-size: 22px; }
+  .container { padding: 20px 16px 40px; }
+  .actions-table { font-size: 12px; }
+}
+
+/* ---- SHARED NAV ---- */
+.ir-nav {
+  background: #0e1117;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  flex-wrap: wrap;
+}
+.ir-nav-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  padding: 14px 20px 14px 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.ir-nav-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 14px 16px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.ir-nav-link:hover { color: rgba(255,255,255,0.85); }
+.ir-nav-link.active {
+  color: white;
+  font-weight: 500;
+  border-bottom-color: white;
+}
+.ir-nav-link.active:hover { color: white; }
+
+</style>
+</head>
+<body>
+<nav class="ir-nav">
+  <div class="ir-nav-brand">CA&amp;S Digital &middot; IR Project</div>
+  <a class="ir-nav-link active" href="#">&#128203; Team Brief</a>
+  <a class="ir-nav-link" href="process-flow.html">&#128200; Process Flow</a>
+  <a class="ir-nav-link" href="gantt.html">&#128198; Project Gantt</a>
+</nav>
+
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-eyebrow">CA&S Digital · Image Recognition Project</div>
+  <div class="header-title">End-to-End Process Flow<br>& Team Action Brief</div>
+  <div class="header-sub">How shelf photos become compliance data — and what every team needs to deliver to make it work</div>
+  <div class="header-meta">
+    <span class="meta-pill urgent">⚠ Ranging lists due 17 April 2026</span>
+    <span class="meta-pill">Updated: 15 April 2026</span>
+    <span class="meta-pill">8 open gaps</span>
+    <span class="meta-pill">Full deploy: July 2026</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- BRIEF -->
+  <div class="section-title" style="margin-top:8px">What this document is</div>
+  <div class="brief-card">
+    <p>This is the authoritative end-to-end reference for the Image Recognition (IR) rollout across Pick n Pay and Checkers stores. It shows exactly what happens — and what data is needed — at every step from a merchandiser opening the app to compliance data appearing on the dashboard.</p>
+    <p>Four technology teams are involved: <strong>Mac Mobile</strong> (field app, server infrastructure, and metadata packaging), <strong>Neurolabs</strong> (AI image recognition), <strong>Keystone / Cognizance</strong> (analytics and compliance engine), and <strong>Pack &amp; Stack</strong> (ranging data). The confirmed data flow is: photo → Mac Mobile → Neurolabs → Mac Mobile (adds metadata) → Keystone → compliance result → Mac Mobile app → merchandiser. Every gap in the data chain is documented here with its owner and status.</p>
+    <p><strong>How to use this:</strong> Use it in every team meeting as the shared reference. When a problem surfaces, find the step it lives in, check the gap, and assign the action. Click any orange gap button to see the full detail.</p>
+  </div>
+
+  <!-- DEADLINES -->
+  <div class="section-title">Critical deadlines</div>
+  <div class="deadlines">
+    <div class="deadline-item urgent">
+      <div class="deadline-date">17 April 2026 — HARD DEADLINE</div>
+      <div class="deadline-text">All ranging lists finalised — Checkers &amp; PnP</div>
+      <div class="deadline-owner">Gareth / Jordan / Camelle</div>
+    </div>
+    <div class="deadline-item urgent">
+      <div class="deadline-date">This week</div>
+      <div class="deadline-text">Keystone API category-level response example</div>
+      <div class="deadline-owner">Jordan</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">Week of 20 April</div>
+      <div class="deadline-text">Product catalog cleanup — Mac Mobile + Neurolabs sync</div>
+      <div class="deadline-owner">Tina / Cameron Dawson / Toby</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">Week of 20 April</div>
+      <div class="deadline-text">New GCP app release — restores image quality</div>
+      <div class="deadline-owner">Mac Mobile</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">24 April 2026, 11am SAST</div>
+      <div class="deadline-text">KeyDash 2.0 Tutorial</div>
+      <div class="deadline-owner">Jordan hosts</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">June 2026</div>
+      <div class="deadline-text">Stress testing — 1,452 stores</div>
+      <div class="deadline-owner">All teams</div>
+    </div>
+    <div class="deadline-item">
+      <div class="deadline-date">July 2026</div>
+      <div class="deadline-text">Full deployment and volume ramp-up</div>
+      <div class="deadline-owner">All teams</div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="section-title">System legend</div>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--mac-bg);border:1px solid var(--mac-border)"></div> Mac Mobile (field app)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--nlb-bg);border:1px solid var(--nlb-border)"></div> Neurolabs (image AI)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--key-bg);border:1px solid var(--key-border)"></div> Keystone / Cognizance (analytics)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--ps-bg);border:1px solid var(--ps-border)"></div> Pack &amp; Stack (ranging data)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--gap-bg);border:1px solid var(--gap-border)"></div> Known gap — click for detail</div>
+  </div>
+
+  <!-- PROCESS FLOW -->
+  <div class="section-title">End-to-end process flow</div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-header">
+    <div class="phase-number">1</div>
+    <div class="phase-label-text">Field — Merchandiser arrives at store</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">01</div>
+      <div class="step-title">Merchandiser logs in to the app</div>
+    </div>
+    <div class="step-sub">Opens Mac Mobile on their handset at the store</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Merchandiser credentials (username + password) linked to their account in Mac Mobile. Must be set up in advance by Sean's team. If credentials aren't configured, the merchandiser cannot start.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">02</div>
+      <div class="step-title">App loads the correct store</div>
+    </div>
+    <div class="step-sub">Merchandiser selects or is auto-assigned the store they are visiting</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Store ID and name must exist in Mac Mobile's system, and the store must be linked to the merchandiser's route. If the store isn't configured, the merchandiser cannot proceed.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">03</div>
+      <div class="step-title">App shows the category form and principals</div>
+      <button class="gap-btn" onclick="openGap(1)">⚠ GAP 1</button>
+    </div>
+    <div class="step-sub">Merchandiser opens a form for the category (e.g. "Snacking") and sees the list of brand principals to cover (e.g. Nestle, Unilever)</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Ranging list from Pack &amp; Stack must be loaded into Keystone, which feeds Mac Mobile. The ranging list controls which principals appear in the app for this store. If a principal is missing from the ranging list, it will not appear in the app — and compliance will show as zero — even if those products are physically on shelf.<br><br>
+      <strong>Critical data chain:</strong> Pack &amp; Stack → Gareth → Keystone → Mac Mobile
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge ps">Pack &amp; Stack</span><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Gareth / Jordan / Camelle</div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-header">
+    <div class="phase-number">2</div>
+    <div class="phase-label-text">Capture — Taking the shelf photo</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">04</div>
+      <div class="step-title">Merchandiser takes a photo of the shelf</div>
+      <button class="gap-btn" onclick="openGap(2)">⚠ GAP 2</button>
+    </div>
+    <div class="step-sub">Standing in the aisle, they photograph the relevant shelf section for the selected category</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Good image quality — not blurry, not tilted, no glare. The new GCP app (releasing week of 20 April) will automatically reject bad images before upload. Until then, poor photos are a leading cause of recognition failures. Error rate is currently at 42% — up from 10%.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge multi">GCP</span></div>
+      <div class="owner-tag">Owner: Mac Mobile / Neurolabs</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">05</div>
+      <div class="step-title">Photo is uploaded to Neurolabs</div>
+      <button class="gap-btn" onclick="openGap(3)">⚠ GAP 3</button>
+    </div>
+    <div class="step-sub">The image travels from the handset through Mac Mobile's servers (Vodacom-hosted) to Neurolabs</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Stable server connection. Mac Mobile's Vodacom servers must be operational and passing images through correctly. Server outages mean the image never reaches Neurolabs — the merchandiser waits and no result is returned.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-header">
+    <div class="phase-number">3</div>
+    <div class="phase-label-text">AI Processing — Neurolabs identifies what's on shelf</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step nlb">
+    <div class="step-top">
+      <div class="step-num">06</div>
+      <div class="step-title">AI scans the image and detects products</div>
+    </div>
+    <div class="step-sub">Neurolabs' image recognition engine looks at the photo and identifies every product it can see on the shelf</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> The photo from step 05. Neurolabs runs the detection automatically. No additional input data is needed at this point beyond the image itself.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Toby / Neurolabs</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step nlb">
+    <div class="step-top">
+      <div class="step-num">07</div>
+      <div class="step-title">AI matches each product to the catalog</div>
+      <button class="gap-btn" onclick="openGap(4)">⚠ GAP 4</button>
+    </div>
+    <div class="step-sub">Each detected product is matched to a known SKU (product code) using its barcode and operational category</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> A clean, complete product catalog in Neurolabs — with correct barcodes and correct operational categories for every product. If the catalog has duplicates, missing barcodes, or wrong categories, Neurolabs cannot match the product and it is dropped from the results entirely.<br><br>
+      <strong>Critical sign-off required:</strong> Tina (PnP) and Toby (Neurolabs) must confirm the catalog is clean before this step can be trusted.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Toby / Tina / Cameron Dawson</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step nlb">
+    <div class="step-top">
+      <div class="step-num">08a</div>
+      <div class="step-title">Neurolabs sends recognition results back to Mac Mobile</div>
+    </div>
+    <div class="step-sub">Results do NOT go directly to Keystone — they return to Mac Mobile first</div>
+    <div class="step-data">
+      <strong>Data passed:</strong> SKU code + confidence score (%) per detected product. This goes back to Mac Mobile, not to Keystone. This is a critical step that was previously undocumented.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge nlb">Neurolabs</span><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Toby (Neurolabs) → Christo / Sean (Mac Mobile)</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">08b</div>
+      <div class="step-title">Mac Mobile adds metadata and sends enriched request to Keystone</div>
+      <button class="gap-btn" onclick="openGap(8)">⚠ GAP 8</button>
+    </div>
+    <div class="step-sub">Mac Mobile packages the Neurolabs results with store and session context, then forwards the combined JSON to Keystone</div>
+    <div class="step-data">
+      <strong>Metadata added by Mac Mobile:</strong> Store ID (customer ID), rep identifier, form/category the photo was taken for, and the principal. This is what allows Keystone to know which store, rep, category and principal the Neurolabs results belong to.<br><br>
+      <strong>Why this matters:</strong> Keystone never receives raw Neurolabs output. If the store ID passed by Mac Mobile is a duplicate or stale ID from the old Pack &amp; Stack system, Keystone may process the request against the wrong ranging list or return no result at all.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Christo / Sean (Mac Mobile) → Jordan (Keystone)</div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-header">
+    <div class="phase-number">4</div>
+    <div class="phase-label-text">Transform — Keystone calculates compliance</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step ps">
+    <div class="step-top">
+      <div class="step-num">09</div>
+      <div class="step-title">Keystone checks what should be on shelf</div>
+      <button class="gap-btn" onclick="openGap(5)">⚠ GAP 5</button>
+    </div>
+    <div class="step-sub">Keystone looks at the ranging list for this store — the master list of what products should be stocked here</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> A complete, store-level ranging list covering all principals. If the ranging list is partial, Keystone has no baseline for those missing principals. Compliance will show as zero for them — even if the products are physically on shelf.<br><br>
+      <strong>Hard deadline: 17 April 2026</strong> — all ranging lists must be finalised for Checkers and PnP.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge ps">Pack &amp; Stack</span><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Gareth / Jordan / Camelle · Senior: Ruan</div>
+      <div class="step-title">Keystone compares what's there vs what should be there</div>
+      <button class="gap-btn" onclick="openGap(6)">⚠ GAP 6</button>
+    </div>
+    <div class="step-sub">Cross-references the Neurolabs SKU results against the ranging list to calculate on-shelf compliance per product</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Operational categories from Neurolabs must match the categories Keystone uses. If they don't align — which is the current problem — Keystone cannot correctly group and compare products by category. This is the months-long unresolved category mapping issue.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span><span class="badge nlb">Neurolabs</span></div>
+      <div class="owner-tag">Owner: Cameron Dawson / Jordan / Tina</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step key">
+    <div class="step-top">
+      <div class="step-num">11</div>
+      <div class="step-title">Keystone builds the action output</div>
+      <button class="gap-btn" onclick="openGap(7)">⚠ GAP 7</button>
+    </div>
+    <div class="step-sub">Structures the compliance result so the app can display it as Category &gt; Principal &gt; Items — what the merchandiser needs to fix</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> The API response must include category-level data, not just store + principal level. Currently the Keystone API does not return this structure. Jordan is building an example response this week, once GAP 6 is resolved. This is blocking step 13.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Jordan / Keystone</div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-header">
+    <div class="phase-number">5</div>
+    <div class="phase-label-text">Delivery — Results return to the merchandiser</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step multi">
+    <div class="step-top">
+      <div class="step-num">12</div>
+      <div class="step-title">Keystone sends the results to Mac Mobile</div>
+    </div>
+    <div class="step-sub">A structured JSON response travels via API from Keystone back to Mac Mobile's servers</div>
+    <div class="step-data">
+      <strong>Data passed:</strong> Compliance status per product, structured as Category &gt; Principal &gt; Items. Mac Mobile receives this and renders it in the app on the merchandiser's handset.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Jordan / Keystone + Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">13</div>
+      <div class="step-title">The app shows the merchandiser what to action</div>
+    </div>
+    <div class="step-sub">On the handset, the merchandiser sees exactly which products are missing or out of compliance — and what to fix</div>
+    <div class="step-data">
+      <strong>What they see:</strong> A list of products under each principal that need attention, structured clearly by category. This is the "moment of truth" for the whole system — everything upstream exists to produce this screen.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase-header">
+    <div class="phase-number">6</div>
+    <div class="phase-label-text">Feedback — Action taken and loop closed</div>
+    <div class="phase-line"></div>
+  </div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">14</div>
+      <div class="step-title">Merchandiser restocks or fixes the shelf</div>
+    </div>
+    <div class="step-sub">Based on the app's instructions, they move products, fill gaps, or flag out-of-stocks to their supervisor</div>
+    <div class="step-data">
+      <strong>Data needed:</strong> Nothing additional at this point. The merchandiser acts on what the app tells them. The quality of these instructions depends entirely on the data quality in every step above.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge multi">Field team</span></div>
+      <div class="owner-tag">Owner: Field operations</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step mac">
+    <div class="step-top">
+      <div class="step-num">15</div>
+      <div class="step-title">Merchandiser closes the form</div>
+    </div>
+    <div class="step-sub">Form is submitted in the app — triggering a second photo if required for validation — and the visit is recorded</div>
+    <div class="step-data">
+      <strong>Data captured:</strong> Visit timestamp, form completion status, any after-action photos. All feeds back through Mac Mobile to Keystone for dashboard reporting.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge mac">Mac Mobile</span></div>
+      <div class="owner-tag">Owner: Sean / Mac Mobile</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="step key">
+    <div class="step-top">
+      <div class="step-num">16</div>
+      <div class="step-title">Compliance data lands in the dashboard</div>
+    </div>
+    <div class="step-sub">Keystone records the visit results — OSA scores, compliance rates, and trends by store, category, and principal</div>
+    <div class="step-data">
+      <strong>What this powers:</strong> KeyDash 2.0 reporting (tutorial 24 April, 11am SAST). Principal-level and category-level reporting for Cameron Dawson and the CA&amp;S Digital team. This is the end deliverable that clients and principals will see.
+    </div>
+    <div class="step-footer">
+      <div class="badges"><span class="badge key">Keystone</span></div>
+      <div class="owner-tag">Owner: Cameron Dawson / Jordan / Keystone</div>
+    </div>
+  </div>
+
+  <!-- ACTIONS TABLE -->
+  <div class="section-title" style="margin-top:40px">Open actions by person — as at 15 April 2026</div>
+  <table class="actions-table">
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>Action</th>
+        <th>Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="person-name">Gareth</div><div style="font-size:11px;color:var(--ink-4)">CA&amp;S Digital</div></td>
+        <td>Resolve ranging list issues and confirm pilot scope for Checkers and PnP. Follow up daily with Jordan and team on data and ranging gaps. Track category parameter alignment, product sync, and sign-offs.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Cameron Dawson</div><div style="font-size:11px;color:var(--ink-4)">Keystone</div></td>
+        <td>Coordinate with Mac Mobile and Tina on catalog cleanup. Push for green-light approval on ranging and listing docs with Pack &amp; Stack. Coordinate with Camelle for dashboard data issue screenshots.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Jordan</div><div style="font-size:11px;color:var(--ink-4)">Cognizance</div></td>
+        <td>Review ranging lists for Checkers and PnP — confirm which principals are included. Send current ranging lists to team for validation. Prepare example API response with category-level data once SKU-category mapping is received. Review Haleon Article Master Data file with Luke.</td>
+        <td><span class="due-chip urgent">This week</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Toby</div><div style="font-size:11px;color:var(--ink-4)">Neurolabs</div></td>
+        <td>Provide full product export with barcode and operational category for catalog. Arrange catalog managers to validate image recognition accuracy.</td>
+        <td><span class="due-chip">ASAP</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Tina</div><div style="font-size:11px;color:var(--ink-4)">PnP / Pack &amp; Stack</div></td>
+        <td>Lead product data cleanup. Coordinate with Mac Mobile on catalog alignment. Participate in final sign-off on ranging and category parameters.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Ruan</div><div style="font-size:11px;color:var(--ink-4)">Pack &amp; Stack — Senior</div></td>
+        <td>Senior sign-off on all ranging and listing data from Pack &amp; Stack side. Ensure POS scan data is complete and covers all principals for Checkers and PnP. Final escalation point for any Pack &amp; Stack data blockers.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Camelle</div><div style="font-size:11px;color:var(--ink-4)">Pack &amp; Stack</div></td>
+        <td>Day-to-day coordination on ranging data and POS scan data. Coordinate ranging list sign-off with Gareth and Jordan. Liaise with Cameron Dawson on dashboard screenshots and data issues.</td>
+        <td><span class="due-chip urgent">17 Apr</span></td>
+      </tr>
+      <tr>
+        <td><div class="person-name">Sean</div><div style="font-size:11px;color:var(--ink-4)">Mac Mobile</div></td>
+        <td>Monitor Mac Mobile server stability and coordinate with Vodacom. Ensure new GCP app release goes out week of 20 April. Confirm merchandiser credentials and store routing are configured for pilot stores.</td>
+        <td><span class="due-chip">20 Apr</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- HOW TO USE -->
+  <div class="section-title">How the team should use this document</div>
+  <div class="brief-card">
+    <p><strong>In every team meeting:</strong> Open this document as the shared screen. When a problem is raised, navigate to the step it belongs to and check the gap. Assign the action to the named owner on the spot.</p>
+    <p><strong>When a gap is resolved:</strong> Notify Gareth so the document can be updated. A gap is only resolved when the data is confirmed clean — not when an action has been taken.</p>
+    <p><strong>The three things that must happen by 17 April</strong> for the pilot to proceed: (1) Ranging lists finalised and loaded into Keystone for all pilot stores. (2) Product catalog cleaned and signed off by Tina and Toby. (3) Jordan's example API response with category-level structure shared with the team for review.</p>
+    <p><strong>Remember:</strong> Every gap in this flow has a direct effect on what the merchandiser sees in the app. A bad ranging list means missing principals. A dirty catalog means missed products. A broken API structure means the compliance screen shows nothing useful. The merchandiser experience is the measure of whether we've solved it.</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  CA&amp;S Digital · IR Project · Last updated 15 April 2026 · Gareth Paterson
+</div>
+
+<!-- GAP MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeGap(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <span class="modal-close" onclick="closeGap(null)">✕ close</span>
+    <div class="modal-gap-id" id="modal-id"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-owner" id="modal-owner"></div>
+  </div>
+</div>
+
+<script>
+const gaps = {
+  1: {
+    id: "GAP 1",
+    title: "Ranging list incomplete and retailer-specific",
+    body: "The principal list shown in the app is not complete. Not all principals flow through for all stores. Confirmed from Jordan's call (15 Apr): Diplomat data only exists for PnP — not Checkers. Cerebos and Diplomat are not available from the Checkers data at all. 5 principals currently available for Checkers (3M, Helion, Permark, Surf Roots, GQ Tissue), with more coverage on PnP side. The app form must be retailer-specific — a Checkers store should only show principals with Checkers ranging data, otherwise merchandisers photograph shelves that return zero results every time.",
+    owner: "Owner: Gareth / Jordan / Camelle · Deadline: 17 April 2026"
+  },
+  2: {
+    id: "GAP 2",
+    title: "Image quality degradation",
+    body: "Error rate has jumped from 10% to 42%. Causes include lower-quality handsets, store lighting and flash, and small reflective packaging that the AI struggles with. Fix: new GCP app (releasing week of 20 April) adds blur and tilt rejection, automatically rejecting poor images before they are sent to Neurolabs.",
+    owner: "Owner: Mac Mobile / Neurolabs · Fix due: Week of 20 April"
+  },
+  3: {
+    id: "GAP 3",
+    title: "Mac Mobile server instability",
+    body: "Vodacom-hosted Mac Mobile servers are experiencing outages. Images are captured in the field but never reach Neurolabs — the merchandiser waits in the aisle with no result. Sean's team is monitoring. This is ongoing.",
+    owner: "Owner: Sean / Mac Mobile · Status: Ongoing monitoring"
+  },
+  4: {
+    id: "GAP 4",
+    title: "Neurolabs catalog not clean",
+    body: "The product catalog in Neurolabs has duplicates, missing barcodes, and misaligned operational categories. This causes incorrect or zero product matches — products are on the photo but do not appear in the results. Fix: Tina is leading cleanup once Toby provides the full export with barcode and operational category data.",
+    owner: "Owner: Toby / Tina / Cameron Dawson · Fix: Toby to send export ASAP"
+  },
+  5: {
+    id: "GAP 5",
+    title: "Ranging list partial coverage",
+    body: "Only some principals appear in the ranging lists fed to Keystone. If a product is detected by Neurolabs but has no entry in the ranging list for that store, Keystone has no expected baseline — and cannot calculate compliance. Root cause: POS data from Pack & Stack is not complete for all principals.",
+    owner: "Owner: Camelle / Jordan / Gareth · Senior sign-off: Ruan · Deadline: 17 April 2026"
+  },
+  6: {
+    id: "GAP 6",
+    title: "Category mapping misaligned",
+    body: "Operational categories in Mac Mobile do not map cleanly to Neurolabs or Keystone. This has been an unresolved issue for months. Without aligned categories, Keystone cannot correctly group and compare detected products against the ranging list. Fix: Tina is coordinating alignment. Jordan will prepare an example API response once the SKU-to-category mapping is confirmed.",
+    owner: "Owner: Cameron Dawson / Jordan / Tina · Status: Months unresolved — escalate"
+  },
+  7: {
+    id: "GAP 7",
+    title: "API response lacks category structure",
+    body: "Keystone's API currently filters at store and principal level only. The app needs the response structured as Category > Principal > Items for the merchandiser to see actionable instructions. Jordan is building an example response this week — but this is blocked by GAP 6 being resolved first. Until this is fixed, step 13 (merchandiser sees what to action) cannot work correctly.",
+    owner: "Owner: Jordan / Keystone · Blocked by: GAP 6"
+  },
+  8: {
+    id: "GAP 8",
+    title: "Duplicate store IDs in Mac Mobile data",
+    body: "Many stores have two customer IDs — one from the old Pack & Stack system, one from the new AIS system. For example, Checkers Claremont appears twice with different IDs. Jordan has created double ranging list entries as a temporary workaround so both IDs get processed. However this creates duplicate data, wastes space, and is not a sustainable state. The old IDs need to be identified and removed from Mac Mobile's system. Owner: Jordan to compile a list of duplicate IDs; Mac Mobile and Pack & Stack to clean from their systems.",
+    owner: "Owner: Jordan / Mac Mobile / Pack & Stack · Status: Workaround in place — cleanup needed"
+  }
+};
+
+function openGap(n) {
+  const g = gaps[n];
+  document.getElementById('modal-id').textContent = g.id;
+  document.getElementById('modal-title').textContent = g.title;
+  document.getElementById('modal-body').textContent = g.body;
+  document.getElementById('modal-owner').textContent = g.owner;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeGap(e) {
+  if (!e || e.target === document.getElementById('modal-bg')) {
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('modal-bg').classList.remove('open');
+});
+</script>
+
+</body>
+</html>
