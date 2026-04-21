@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA&S Digital · IR Project</title>
+<style>
+:root {
+  --green:#0F6E56; --green-l:#E1F5EE; --green-m:#9FE1CB;
+  --blue:#185FA5; --blue-l:#E6F1FB;
+  --purple:#534AB7; --purple-l:#EEEDFE;
+  --amber:#854F0B; --amber-l:#FAEEDA;
+  --red:#A32D2D; --red-l:#FCEBEB;
+  --bg:#F5F4F0; --border:#D3D1C7; --muted:#6B6F7A; --dark:#0E1117;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Segoe UI',Arial,sans-serif;color:var(--dark);min-height:100vh;}
+
+.hdr{background:var(--dark);padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.4);}
+.hdr-l{display:flex;align-items:center;gap:14px;padding:14px 0;}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green-m);}
+.hdr-title{font-size:13px;font-weight:700;color:#888;letter-spacing:1.2px;text-transform:uppercase;}
+.hdr-title span{color:white;}
+.upd{background:#1a2a1a;border:1px solid var(--green);color:var(--green-m);font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;}
+
+.tabs{background:var(--dark);border-bottom:1px solid #2a2a2a;padding:0 32px;display:flex;}
+.tab{padding:12px 20px;font-size:12px;font-weight:600;color:#666;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;user-select:none;display:flex;align-items:center;gap:7px;}
+.tab:hover{color:#bbb;}
+.tab.active{color:white;border-bottom-color:var(--green-m);}
+
+.pane{display:none;padding:28px 32px;max-width:1060px;margin:0 auto;}
+.pane.active{display:block;}
+
+.stitle{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.stitle:first-child{margin-top:0;}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr;}}
+
+.stat{background:var(--dark);border-radius:10px;padding:18px 16px;text-align:center;border:1px solid #222;}
+.stat-num{font-size:28px;font-weight:700;margin-bottom:4px;}
+.stat-num.g{color:var(--green-m);}
+.stat-num.b{color:#6DB3F2;}
+.stat-num.a{color:#F5C842;}
+.stat-num.r{color:#F07070;}
+.stat-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#555;}
+
+.card{background:white;border-radius:10px;padding:16px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.card.green{background:var(--green-l);border-color:var(--green);}
+.card.amber{background:var(--amber-l);border-color:var(--amber);}
+.card.red{background:var(--red-l);border-color:var(--red);border-style:dashed;}
+.clabel{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.card.green .clabel{color:var(--green);}
+.card.amber .clabel{color:var(--amber);}
+.card.red .clabel{color:var(--red);}
+.card h3{font-size:13px;font-weight:700;margin-bottom:5px;}
+.card p,.card li{font-size:12px;line-height:1.55;color:#444;}
+.card ul{padding-left:16px;}
+
+.badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;}
+.badge.resolved{background:var(--green);color:white;}
+.badge.decided{background:var(--blue);color:white;}
+.badge.progress{background:var(--amber);color:white;}
+.badge.open{background:var(--red);color:white;}
+.badge.deferred{background:#888;color:white;}
+.badge.blocked{background:#3a1a1a;color:#F07070;border:1px solid var(--red);}
+
+table{width:100%;border-collapse:collapse;font-size:12px;background:white;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+th{background:var(--dark);color:white;padding:9px 12px;text-align:left;font-size:11px;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid #f0eeea;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafaf8;}
+.tick{color:var(--green);font-weight:700;}
+.cross{color:#ccc;}
+.owner{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 7px;font-size:10px;font-weight:600;color:#444;white-space:nowrap;}
+.due{font-size:10px;font-weight:700;color:var(--amber);}
+.due.hot{color:var(--red);}
+.due.ok{color:var(--green);}
+
+.sk{background:white;border-radius:8px;padding:12px 14px;border:1px solid var(--border);}
+.sk .name{font-weight:700;font-size:13px;margin-bottom:2px;}
+.sk .org{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;}
+.sk .role{font-size:12px;color:#555;line-height:1.4;}
+
+/* FLOW */
+.flow-wrap{background:white;border-radius:12px;padding:24px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.flow-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;padding:10px 14px;background:var(--bg);border-radius:8px;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#444;}
+.ls{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+svg text{font-family:'Segoe UI',Arial,sans-serif;}
+
+/* GANTT */
+.gantt-hdr{background:var(--dark);border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.gantt-hdr h2{color:white;font-size:20px;font-weight:700;margin-bottom:4px;}
+.gantt-hdr p{color:#888;font-size:12px;}
+.gcounts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;min-width:200px;}
+.gcount{border-radius:8px;padding:10px;text-align:center;}
+.gcount .n{font-size:22px;font-weight:700;}
+.gcount .l{font-size:9px;font-weight:700;letter-spacing:1px;color:#666;text-transform:uppercase;}
+.gcount.t{background:#1a2a1a;border:1px solid var(--green);}
+.gcount.t .n{color:var(--green-m);}
+.gcount.a{background:#1a1a3a;border:1px solid #3a3a7a;}
+.gcount.a .n{color:#6DB3F2;}
+.gcount.o{background:#3a2a1a;border:1px solid #5a4a2a;}
+.gcount.o .n{color:#F5C842);}
+
+.gfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.flbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-right:4px;}
+.fbtn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:white;font-size:11px;font-weight:600;color:#555;cursor:pointer;transition:all .15s;}
+.fbtn:hover,.fbtn.active{background:var(--dark);color:white;border-color:var(--dark);}
+.fbtn.cas.active{background:var(--green);border-color:var(--green);color:white;}
+.fbtn.mac.active{background:var(--blue);border-color:var(--blue);color:white;}
+.fbtn.nlb.active{background:#7C5CBF;border-color:#7C5CBF;color:white;}
+.fbtn.key.active{background:var(--purple);border-color:var(--purple);color:white;}
+.fbtn.pns.active{background:var(--amber);border-color:var(--amber);color:white;}
+
+.gphase{margin-bottom:24px;}
+.phdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pnum{width:24px;height:24px;border-radius:50%;background:var(--dark);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pname{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.pline{flex:1;height:1px;background:var(--border);}
+
+.gtask{background:white;border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;transition:box-shadow .15s;}
+.gtask:hover{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.gtask.bk{border-left:3px solid var(--red);}
+.gtask.dn{opacity:.55;}
+.tname{font-size:12px;font-weight:600;margin-bottom:2px;}
+.tsub{font-size:11px;color:var(--muted);}
+.tdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:2px;}
+.tdot.cas{background:var(--green);}
+.tdot.mac{background:var(--blue);}
+.tdot.nlb{background:#7C5CBF;}
+.tdot.key{background:var(--purple);}
+.tdot.pns{background:var(--amber);}
+.gtask[data-hidden="true"]{display:none;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="dot"></div>
+    <div class="hdr-title">CA&amp;S Digital &nbsp;·&nbsp; <span>IR Project</span></div>
+  </div>
+  <div class="upd">Updated 21 Apr 2026</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('brief',this)">📋 Team Brief</div>
+  <div class="tab" onclick="switchTab('flow',this)">⚡ Process Flow</div>
+  <div class="tab" onclick="switchTab('gantt',this)">📅 Project Gantt</div>
+  <div class="tab" onclick="switchTab('stores',this)">🏪 April Stores</div>
+</div>
+
+<!-- ===== TAB 1: TEAM BRIEF ===== -->
+<div class="pane active" id="pane-brief">
+
+  <div class="g4" style="margin-bottom:24px;">
+    <div class="stat"><div class="stat-num g">9</div><div class="stat-lbl">Gaps tracked</div></div>
+    <div class="stat"><div class="stat-num b">4</div><div class="stat-lbl">Resolved / decided</div></div>
+    <div class="stat"><div class="stat-num a">4</div><div class="stat-lbl">Open / in progress</div></div>
+    <div class="stat"><div class="stat-num r">1</div><div class="stat-lbl">Blocked</div></div>
+  </div>
+
+  <div class="stitle">What this project is</div>
+  <div class="card" style="margin-bottom:12px;">
+    <p>The IR project enables Field Operations Managers (FOMs) to photograph retail shelves using the <strong>Mac Mobile</strong> app. Photos are processed by <strong>Neurolabs</strong> AI to detect products on shelf. Results are matched against ranging lists in <strong>Keystone</strong> and returned to the FOM as a structured action list: <strong>Category &gt; Principal &gt; Items</strong>. The goal is on-shelf availability (OSA) and compliance reporting at scale across Checkers and Pick n Pay stores.</p>
+    <p style="margin-top:8px;">Pilot target: <strong>1,452 stores</strong> · <strong>120 FOMs</strong> · Stress test June 2026 · Full deployment July 2026.</p>
+  </div>
+
+  <div class="stitle">Decisions confirmed 20–21 April 2026</div>
+  <div class="g2" style="margin-bottom:12px;">
+    <div class="card green">
+      <div class="badge resolved">Resolved — GAP 1 + GAP 5</div>
+      <h3>Ranging lists finalised</h3>
+      <p>PnP and Checkers ranging lists loaded into Keystone. PnP: Diplomat, 3M, Haleon, Natures Choice. Checkers: Cerebos, Permark, Sir Fruit, Haleon, GQ Tissue, 3M (confirmed 21 Apr). Jordan tested — looking good.</p>
+    </div>
+    <div class="card green">
+      <div class="badge decided">Decided — GAP 4 + GAP 6</div>
+      <h3>Use Neurolabs catalogue as-is</h3>
+      <p>Latest Neurolabs catalogue accepted as authoritative. Jordan loads every SKU and its Neurolabs category directly into the ranging list. Category mismatches (e.g. 3M tape in Snacking) are a known risk — Pack &amp; Stack and Neurolabs own fixing them. Not a blocker.</p>
+    </div>
+    <div class="card green">
+      <div class="badge decided">Decided — GAP 9</div>
+      <h3>Zero suppression: Mac Mobile filters</h3>
+      <p>When Neurolabs detects a product with no ranging list, Mac Mobile suppresses it. FOM never sees a zero result. Neurolabs continues capturing all detected products — filter sits at the app layer.</p>
+    </div>
+    <div class="card amber">
+      <div class="badge deferred">Deferred</div>
+      <h3>Cerebos (Sarah Boss) — no data access</h3>
+      <p>Webby file article numbers don't map to barcodes. Store IDs mismatched. Decision: proceed without Cerebos. Will return zeros — expected and acceptable. Revisit when data access is resolved.</p>
+    </div>
+  </div>
+
+  <div class="stitle">Gap tracker — updated 21 April 2026</div>
+  <table style="margin-bottom:12px;">
+    <thead><tr><th style="width:70px;">Gap</th><th>Issue</th><th style="width:110px;">Status</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td><strong>GAP 1</strong></td><td>Ranging list incomplete / retailer mismatch</td><td><span class="badge resolved">Resolved</span></td><td><span class="owner">Jordan</span> <span class="owner">Gareth</span></td></tr>
+      <tr><td><strong>GAP 2</strong></td><td>Image quality 42% error rate. GCP blur/tilt rejection releasing w/c 20 Apr.</td><td><span class="badge progress">In progress</span></td><td><span class="owner">Sean</span> <span class="owner">Christo</span></td></tr>
+      <tr><td><strong>GAP 3</strong></td><td>Mac Mobile server instability (Vodacom). Images lost before reaching Neurolabs.</td><td><span class="badge open">Open</span></td><td><span class="owner">Sean</span></td></tr>
+      <tr><td><strong>GAP 4</strong></td><td>Neurolabs catalogue not clean. Decision: use as-is, cleanup in background.</td><td><span class="badge decided">Decided</span></td><td><span class="owner">Jordan</span> loads as-is</td></tr>
+      <tr><td><strong>GAP 5</strong></td><td>Ranging list partial coverage.</td><td><span class="badge resolved">Resolved</span></td><td><span class="owner">Jordan</span> <span class="owner">Camelle</span></td></tr>
+      <tr><td><strong>GAP 6</strong></td><td>Category mapping misaligned. Neurolabs categories now accepted as authority.</td><td><span class="badge decided">Decided</span></td><td><span class="owner">Jordan</span> <span class="owner">Tina</span></td></tr>
+      <tr><td><strong>GAP 7</strong></td><td>Keystone API response lacks Category &gt; Principal &gt; Items structure. Jordan building example — blocked pending catalogue load.</td><td><span class="badge blocked">Blocked</span></td><td><span class="owner">Jordan</span></td></tr>
+      <tr><td><strong>GAP 8</strong></td><td>Duplicate store IDs (old PNS vs AIS). Jordan compiled list. Mac Mobile + PnS to remove stale IDs.</td><td><span class="badge progress">In progress</span></td><td><span class="owner">Jordan</span></td></tr>
+      <tr><td><strong>GAP 9</strong></td><td>Zero suppression. Mac Mobile to filter — FOM never sees zeros.</td><td><span class="badge resolved">Resolved</span></td><td><span class="owner">Christo</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="stitle">Principal matrix — confirmed 21 April 2026</div>
+  <table style="margin-bottom:12px;">
+    <thead><tr><th>Principal</th><th>Checkers</th><th>Pick n Pay</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Haleon</strong></td><td class="tick">✓</td><td class="tick">✓</td><td>Both retailers. Primary pilot test case.</td></tr>
+      <tr><td><strong>Diplomat</strong></td><td class="cross">—</td><td class="tick">✓</td><td>PnP only. Checkers photos = Neurolabs training, not compliance.</td></tr>
+      <tr style="background:#f0faf6;"><td><strong>3M</strong> <span class="badge resolved" style="margin-left:6px;vertical-align:middle;">Updated 21 Apr</span></td><td class="tick">✓</td><td class="tick">✓</td><td>Now confirmed both retailers. Jordan to verify vs Supergroup on Checkers.</td></tr>
+      <tr><td><strong>Permark</strong></td><td class="tick">✓</td><td class="cross">—</td><td></td></tr>
+      <tr><td><strong>Sir Fruit</strong></td><td class="tick">✓</td><td class="cross">—</td><td></td></tr>
+      <tr><td><strong>GQ Tissue</strong></td><td class="tick">✓</td><td class="cross">—</td><td></td></tr>
+      <tr><td><strong>Natures Choice</strong></td><td class="cross">—</td><td class="tick">✓</td><td>Data from Eben confirmed for PnP.</td></tr>
+      <tr style="color:var(--red);"><td><strong>Cerebos (Sarah Boss)</strong></td><td class="cross">—</td><td class="cross">—</td><td style="color:var(--red);">Deferred. No data access. Returns zeros. Revisit when resolved.</td></tr>
+      <tr style="color:var(--muted);"><td><strong>Supergroup</strong></td><td style="color:var(--muted);">TBC</td><td class="cross">—</td><td style="color:var(--muted);">Expected Checkers. May be replaced by 3M. Jordan to clarify with Camelle.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="stitle">Open actions — as at 21 April 2026</div>
+  <table style="margin-bottom:12px;">
+    <thead><tr><th>Owner</th><th>Action</th><th>Due</th></tr></thead>
+    <tbody>
+      <tr><td><span class="owner">Gareth</span></td><td>Confirm with Toby that latest Neurolabs catalogue has been sent to Jordan</td><td><span class="due hot">Today</span></td></tr>
+      <tr><td><span class="owner">Jordan</span></td><td>Clarify 3M vs Supergroup on Checkers — send query to Camelle</td><td><span class="due hot">ASAP</span></td></tr>
+      <tr><td><span class="owner">Jordan</span></td><td>Load Neurolabs SKU + category into Keystone ranging list (use latest catalogue as-is)</td><td><span class="due hot">This week</span></td></tr>
+      <tr><td><span class="owner">Jordan</span></td><td>Build example API response: Category &gt; Principal &gt; Items structure</td><td><span class="due">This week</span></td></tr>
+      <tr><td><span class="owner">Jordan</span></td><td>Share duplicate store ID list with Mac Mobile and PnS for cleanup</td><td><span class="due">20 Apr</span></td></tr>
+      <tr><td><span class="owner">Gareth</span></td><td>Send invite for 2-hour end-to-end workflow session (first week of May) — Ruan, Camelle, Jordan, Cameron</td><td><span class="due">This week</span></td></tr>
+      <tr><td><span class="owner">Gareth</span></td><td>Confirm Neurolabs billing model (per photo vs per match) re dual-retailer budget impact</td><td><span class="due">Before Andrew update</span></td></tr>
+      <tr><td><span class="owner">Christo</span></td><td>Implement zero suppression in Mac Mobile — confirm which fields, at what stage</td><td><span class="due">W/C 20 Apr</span></td></tr>
+      <tr><td><span class="owner">Sean</span></td><td>Monitor server stability. Ensure GCP app release goes out w/c 20 Apr.</td><td><span class="due">W/C 20 Apr</span></td></tr>
+      <tr><td><span class="owner">Camelle</span></td><td>Share daily operational status doc. Key metric: all events under 5 min = system working.</td><td><span class="due">Daily</span></td></tr>
+      <tr><td><span class="owner">Toby</span></td><td>Confirm latest catalogue export (barcode + operational category) sent to Jordan</td><td><span class="due hot">ASAP</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="stitle">Key dates</div>
+  <table style="margin-bottom:12px;">
+    <thead><tr><th>Date</th><th>Milestone</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--green);font-weight:700;white-space:nowrap;">21 Apr 2026</td><td>Ranging lists finalised — PnP and Checkers loaded into Keystone</td><td><span class="owner">Jordan</span></td></tr>
+      <tr><td style="color:var(--amber);font-weight:700;white-space:nowrap;">W/C 20 Apr</td><td>GCP app release — blur/tilt rejection restores image quality</td><td><span class="owner">Christo</span> <span class="owner">Sean</span></td></tr>
+      <tr><td style="font-weight:700;white-space:nowrap;">W/C 20 Apr</td><td>Neurolabs SKU/category loaded into Keystone ranging list</td><td><span class="owner">Jordan</span></td></tr>
+      <tr><td style="font-weight:700;white-space:nowrap;">W/C 20 Apr</td><td>Duplicate store ID cleanup complete</td><td><span class="owner">Jordan</span></td></tr>
+      <tr><td style="font-weight:700;white-space:nowrap;">5 May 2026</td><td>2-hour end-to-end session — master data, category alignment, ownership</td><td><span class="owner">Gareth</span> hosts</td></tr>
+      <tr><td style="font-weight:700;white-space:nowrap;">June 2026</td><td>Stress testing — 1,452 stores, 120 FOMs</td><td>All teams</td></tr>
+      <tr><td style="font-weight:700;white-space:nowrap;">July 2026</td><td>Full deployment and volume ramp-up</td><td>All teams</td></tr>
+    </tbody>
+  </table>
+
+  <div class="stitle">Stakeholder directory</div>
+  <div style="margin-bottom:8px;font-size:11px;color:var(--muted);">⚠️ Naming rule: "Cam / Kamal / Camela" in transcripts = <strong>Camelle Pietersen (PnS)</strong>. "Cameron" = <strong>Cameron Dawson (Keystone)</strong>. Never confuse.</div>
+  <div class="g3" style="gap:8px;">
+    <div class="sk"><div class="name">Gareth Paterson</div><div class="org"><span class="tdot cas"></span>CA&amp;S Digital — Project Lead</div><div class="role">End-to-end project lead. Stakeholder coordination, data governance, ranging sign-off.</div></div>
+    <div class="sk"><div class="name">Andrew Dawson</div><div class="org"><span class="tdot cas"></span>CA&amp;S Group — CTO</div><div class="role">Senior stakeholder. Gareth reports to Andrew every Friday on IR status.</div></div>
+    <div class="sk"><div class="name">James (CAS)</div><div class="org"><span class="tdot cas"></span>CA&amp;S Group</div><div class="role">Managing PnP FTP data access and vendor codes. Key for Article Master file.</div></div>
+    <div class="sk"><div class="name">Sean Tennent</div><div class="org"><span class="tdot mac"></span>Mac Mobile</div><div class="role">Commercial lead. Server infrastructure, Vodacom stability, GCP app release.</div></div>
+    <div class="sk"><div class="name">Christo Stander</div><div class="org"><span class="tdot mac"></span>Mac Mobile</div><div class="role">Technical lead. App config, form/principal setup, metadata packaging, zero suppression.</div></div>
+    <div class="sk"><div class="name">Jan-Hendrik Putter</div><div class="org"><span class="tdot mac"></span>Mac Mobile</div><div class="role">Reporting build and app-side development.</div></div>
+    <div class="sk"><div class="name">Cameron Dawson</div><div class="org"><span class="tdot key"></span>Keystone / Cognizance</div><div class="role">Analytics platform lead. Keystone API, compliance calculations, catalog cleanup coordination.</div></div>
+    <div class="sk"><div class="name">Jordan Kirkbride</div><div class="org"><span class="tdot key"></span>Keystone / Cognizance</div><div class="role">API and data. Ranging lists, SKU-category mapping, duplicate store IDs, API response structure.</div></div>
+    <div class="sk"><div class="name">Toby Thomas</div><div class="org"><span class="tdot nlb"></span>Neurolabs</div><div class="role">AI and catalogue lead. Image recognition, product catalog, barcode + category exports.</div></div>
+    <div class="sk"><div class="name">Camelle Pietersen</div><div class="org"><span class="tdot pns"></span>Pack &amp; Stack — Ops Lead</div><div class="role">Ranging data, POS scan data, field ops, daily status doc. Signs off ranging lists. In transcripts: "Cam / Kamal".</div></div>
+    <div class="sk"><div class="name">Ruan Lombard</div><div class="org"><span class="tdot pns"></span>Pack &amp; Stack</div><div class="role">Ranging data, POS supply, governance. Cannot sign off ranging docs — that sits with Camelle and Morne.</div></div>
+    <div class="sk"><div class="name">Tina van der Berg</div><div class="org"><span class="tdot pns"></span>Pack &amp; Stack / PnP</div><div class="role">Product data cleanup. Catalogue alignment. Final sign-off on ranging and category parameters.</div></div>
+  </div>
+
+</div><!-- /pane-brief -->
+
+
+<!-- ===== TAB 2: PROCESS FLOW ===== -->
+<div class="pane" id="pane-flow">
+  <div class="flow-wrap">
+    <div style="margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:700;">IR Project — End-to-End Process Flow</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;">CA&amp;S Digital · Updated 21 April 2026 · Sources: Ruan/Gareth 20 Apr + Morning 15 21 Apr</div>
+    </div>
+    <div class="flow-legend">
+      <div class="leg"><div class="ls" style="background:#E1F5EE;border:1px solid #0F6E56;"></div> Mac Mobile</div>
+      <div class="leg"><div class="ls" style="background:#E6F1FB;border:1px solid #185FA5;"></div> Neurolabs</div>
+      <div class="leg"><div class="ls" style="background:#EEEDFE;border:1px solid #534AB7;"></div> Keystone</div>
+      <div class="leg"><div class="ls" style="background:#FAEEDA;border:1px solid #854F0B;"></div> Pack &amp; Stack</div>
+      <div class="leg"><div class="ls" style="background:#FCEBEB;border:1px solid #A32D2D;border-style:dashed;"></div> Known gap</div>
+      <div class="leg"><div class="ls" style="background:#E1F5EE;border:2px solid #0F6E56;"></div> Resolved / Decided</div>
+    </div>
+<svg width="100%" viewBox="0 0 700 1520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round"/></marker>
+  <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></marker>
+  <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></marker>
+  <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round"/></marker>
+</defs>
+<text x="18" y="90" font-size="9" font-weight="700" fill="#0F6E56" text-anchor="middle" transform="rotate(-90,18,90)" letter-spacing="1">FIELD</text>
+<text x="18" y="330" font-size="9" font-weight="700" fill="#185FA5" text-anchor="middle" transform="rotate(-90,18,330)" letter-spacing="1">CAPTURE</text>
+<text x="18" y="560" font-size="9" font-weight="700" fill="#185FA5" text-anchor="middle" transform="rotate(-90,18,560)" letter-spacing="1">AI</text>
+<text x="18" y="780" font-size="9" font-weight="700" fill="#0F6E56" text-anchor="middle" transform="rotate(-90,18,780)" letter-spacing="1">METADATA</text>
+<text x="18" y="1000" font-size="9" font-weight="700" fill="#534AB7" text-anchor="middle" transform="rotate(-90,18,1000)" letter-spacing="1">TRANSFORM</text>
+<text x="18" y="1220" font-size="9" font-weight="700" fill="#534AB7" text-anchor="middle" transform="rotate(-90,18,1220)" letter-spacing="1">DELIVERY</text>
+<text x="18" y="1430" font-size="9" font-weight="700" fill="#888780" text-anchor="middle" transform="rotate(-90,18,1430)" letter-spacing="1">FEEDBACK</text>
+<line x1="36" y1="48" x2="36" y2="196" stroke="#D3D1C7" stroke-width="0.5"/>
+<line x1="36" y1="212" x2="36" y2="476" stroke="#B5D4F4" stroke-width="0.5"/>
+<line x1="36" y1="492" x2="36" y2="706" stroke="#B5D4F4" stroke-width="0.5"/>
+<line x1="36" y1="722" x2="36" y2="878" stroke="#9FE1CB" stroke-width="2"/>
+<line x1="36" y1="894" x2="36" y2="1118" stroke="#AFA9EC" stroke-width="0.5"/>
+<line x1="36" y1="1134" x2="36" y2="1322" stroke="#AFA9EC" stroke-width="0.5"/>
+<line x1="36" y1="1338" x2="36" y2="1490" stroke="#D3D1C7" stroke-width="0.5"/>
+<!-- 1 -->
+<rect x="44" y="48" width="244" height="48" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="68" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">1. FOM logs in</text>
+<text x="166" y="84" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Field Operations Manager opens Mac Mobile</text>
+<line x1="166" y1="96" x2="166" y2="116" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+<!-- 2 -->
+<rect x="44" y="116" width="244" height="48" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="136" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">2. App loads store context</text>
+<text x="166" y="152" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Store ID assigned, categories loaded</text>
+<line x1="166" y1="164" x2="166" y2="184" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+<!-- 3 -->
+<rect x="44" y="184" width="244" height="48" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="204" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">3. Category form opens</text>
+<text x="166" y="220" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">Retailer-specific principals shown</text>
+<rect x="302" y="181" width="170" height="54" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+<text x="387" y="197" font-size="10" font-weight="700" fill="#085041" text-anchor="middle" dominant-baseline="central">GAP 1 — RESOLVED 21 Apr</text>
+<text x="387" y="212" font-size="9" fill="#085041" text-anchor="middle" dominant-baseline="central">PnP: Diplomat, 3M, Haleon, Natures Choice</text>
+<text x="387" y="226" font-size="9" fill="#085041" text-anchor="middle" dominant-baseline="central">Checkers: Permark, Sir Fruit, Haleon, GQ, 3M</text>
+<line x1="302" y1="208" x2="292" y2="208" stroke="#0F6E56" stroke-width="0.8" marker-end="url(#ag)"/>
+<line x1="166" y1="232" x2="166" y2="252" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="196" y="244" font-size="9" fill="#888780" text-anchor="middle">in-aisle</text>
+<!-- 4 -->
+<rect x="44" y="252" width="244" height="48" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="272" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">4. FOM takes photo of shelf</text>
+<text x="166" y="288" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">In-aisle, specific category</text>
+<rect x="302" y="252" width="150" height="48" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="270" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 2 — IN PROGRESS</text>
+<text x="377" y="286" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">42% error · GCP fix w/c 20 Apr</text>
+<line x1="302" y1="276" x2="292" y2="276" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+<line x1="166" y1="300" x2="166" y2="320" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+<!-- 5 -->
+<rect x="44" y="320" width="244" height="48" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="340" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">5. App validates image</text>
+<text x="166" y="356" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">GCP blur/tilt rejection</text>
+<line x1="166" y1="368" x2="166" y2="388" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+<!-- 6 -->
+<rect x="44" y="388" width="244" height="48" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="408" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">6. Image uploaded to Neurolabs</text>
+<text x="166" y="424" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Via Mac Mobile / Vodacom servers</text>
+<rect x="302" y="388" width="150" height="48" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="406" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 3 — OPEN</text>
+<text x="377" y="422" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Server instability (Vodacom)</text>
+<line x1="302" y1="412" x2="292" y2="412" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+<line x1="166" y1="436" x2="166" y2="460" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="196" y="450" font-size="9" fill="#888780" text-anchor="middle">to Neurolabs</text>
+<!-- 7 -->
+<rect x="44" y="460" width="244" height="48" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="480" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">7. AI image recognition runs</text>
+<text x="166" y="496" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Detects all products on shelf</text>
+<line x1="166" y1="508" x2="166" y2="528" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+<!-- 8 -->
+<rect x="44" y="528" width="244" height="48" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="548" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">8. Match products to catalogue</text>
+<text x="166" y="564" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Barcode + operational category</text>
+<rect x="302" y="525" width="170" height="54" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+<text x="387" y="541" font-size="10" font-weight="700" fill="#085041" text-anchor="middle" dominant-baseline="central">GAP 4 — DECIDED 21 Apr</text>
+<text x="387" y="556" font-size="9" fill="#085041" text-anchor="middle" dominant-baseline="central">Use Neurolabs catalogue as-is.</text>
+<text x="387" y="570" font-size="9" fill="#085041" text-anchor="middle" dominant-baseline="central">Jordan loads SKU + category into ranging.</text>
+<line x1="302" y1="552" x2="292" y2="552" stroke="#0F6E56" stroke-width="0.8" marker-end="url(#ag)"/>
+<line x1="166" y1="576" x2="166" y2="604" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
+<text x="250" y="592" font-size="9" fill="#185FA5" text-anchor="middle" font-weight="600">back to Mac Mobile</text>
+<!-- 8a -->
+<rect x="44" y="604" width="244" height="48" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="166" y="624" font-size="12" font-weight="600" fill="#0C447C" text-anchor="middle" dominant-baseline="central">8a. Results back to Mac Mobile</text>
+<text x="166" y="640" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">SKU + confidence scores returned</text>
+<rect x="460" y="606" width="80" height="16" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+<text x="500" y="614" font-size="8" font-weight="700" fill="#085041" text-anchor="middle" dominant-baseline="central">CONFIRMED</text>
+<line x1="166" y1="652" x2="166" y2="678" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#ag)"/>
+<text x="246" y="667" font-size="9" fill="#0F6E56" text-anchor="middle" font-weight="600">metadata added</text>
+<!-- 8b -->
+<rect x="44" y="678" width="244" height="62" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="2"/>
+<text x="166" y="697" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">8b. Mac Mobile adds metadata</text>
+<text x="166" y="713" font-size="10" fill="#085041" text-anchor="middle" dominant-baseline="central">Store ID · Rep · Form/Category · Principal</text>
+<text x="166" y="729" font-size="10" fill="#085041" text-anchor="middle" dominant-baseline="central">Sends enriched JSON to Keystone API</text>
+<rect x="302" y="678" width="160" height="62" rx="7" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="382" y="697" font-size="10" font-weight="700" fill="#854F0B" text-anchor="middle" dominant-baseline="central">GAP 8 — IN PROGRESS</text>
+<text x="382" y="712" font-size="9" fill="#854F0B" text-anchor="middle" dominant-baseline="central">Dup store IDs compiled by Jordan.</text>
+<text x="382" y="727" font-size="9" fill="#854F0B" text-anchor="middle" dominant-baseline="central">Mac + PnS removing stale IDs.</text>
+<line x1="302" y1="709" x2="292" y2="709" stroke="#854F0B" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+<line x1="166" y1="740" x2="166" y2="768" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="208" y="756" font-size="9" fill="#888780" text-anchor="middle">to Keystone</text>
+<!-- Pack & Stack -->
+<rect x="460" y="796" width="175" height="58" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+<text x="547" y="815" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">Pack &amp; Stack</text>
+<text x="547" y="831" font-size="10" fill="#085041" text-anchor="middle" dominant-baseline="central">Ranging lists FINALISED 21 Apr</text>
+<text x="547" y="845" font-size="9" font-weight="700" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">GAP 5 — RESOLVED</text>
+<line x1="460" y1="825" x2="294" y2="840" stroke="#0F6E56" stroke-width="1" marker-end="url(#ag)"/>
+<!-- 9 -->
+<rect x="44" y="768" width="244" height="48" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="788" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">9. Keystone receives request</text>
+<text x="166" y="804" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Checks ranging list for this store</text>
+<line x1="166" y1="816" x2="166" y2="844" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
+<!-- 10 -->
+<rect x="44" y="844" width="244" height="48" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="864" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">10. Cross-ref vs ranging list</text>
+<text x="166" y="880" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">On-shelf vs what should be there</text>
+<rect x="302" y="844" width="170" height="48" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+<text x="387" y="862" font-size="10" font-weight="700" fill="#085041" text-anchor="middle" dominant-baseline="central">GAP 6 — DECIDED 21 Apr</text>
+<text x="387" y="878" font-size="9" fill="#085041" text-anchor="middle" dominant-baseline="central">Neurolabs categories = authority. Mismatches = PnS + NLB fix.</text>
+<line x1="302" y1="868" x2="292" y2="868" stroke="#0F6E56" stroke-width="0.8" marker-end="url(#ag)"/>
+<line x1="166" y1="892" x2="166" y2="920" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
+<!-- 11 -->
+<rect x="44" y="920" width="244" height="48" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="940" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">11. Build action output</text>
+<text x="166" y="956" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Category → Principal → Items</text>
+<rect x="302" y="920" width="150" height="48" rx="7" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5" stroke-dasharray="4 2"/>
+<text x="377" y="938" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 7 — BLOCKED</text>
+<text x="377" y="954" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">API cat-level response pending</text>
+<line x1="302" y1="944" x2="292" y2="944" stroke="#E24B4A" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+<line x1="166" y1="968" x2="166" y2="996" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="212" y="984" font-size="9" fill="#888780" text-anchor="middle">API response</text>
+<!-- 12 -->
+<rect x="44" y="996" width="244" height="48" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="1016" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">12. Keystone → Mac Mobile</text>
+<text x="166" y="1032" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Structured JSON response</text>
+<rect x="302" y="996" width="170" height="48" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+<text x="387" y="1014" font-size="10" font-weight="700" fill="#085041" text-anchor="middle" dominant-baseline="central">GAP 9 — RESOLVED 21 Apr</text>
+<text x="387" y="1030" font-size="9" fill="#085041" text-anchor="middle" dominant-baseline="central">Mac Mobile suppresses zeros. FOM sees actionals only.</text>
+<line x1="302" y1="1020" x2="292" y2="1020" stroke="#0F6E56" stroke-width="0.8" marker-end="url(#ag)"/>
+<line x1="166" y1="1044" x2="166" y2="1072" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+<!-- 13 -->
+<rect x="44" y="1072" width="244" height="48" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="166" y="1092" font-size="12" font-weight="600" fill="#085041" text-anchor="middle" dominant-baseline="central">13. App shows what to action</text>
+<text x="166" y="1108" font-size="10" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">FOM sees fix list — zeros suppressed</text>
+<line x1="166" y1="1120" x2="166" y2="1148" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+<!-- 14 -->
+<rect x="44" y="1148" width="244" height="48" rx="7" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<text x="166" y="1168" font-size="12" font-weight="600" fill="#2C2C2A" text-anchor="middle" dominant-baseline="central">14. FOM takes action</text>
+<text x="166" y="1184" font-size="10" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">Restocks, fixes compliance issues</text>
+<line x1="166" y1="1196" x2="166" y2="1224" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+<!-- 15 -->
+<rect x="44" y="1224" width="244" height="48" rx="7" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<text x="166" y="1244" font-size="12" font-weight="600" fill="#2C2C2A" text-anchor="middle" dominant-baseline="central">15. Closes the form</text>
+<text x="166" y="1260" font-size="10" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">Submits, records visit</text>
+<line x1="166" y1="1272" x2="166" y2="1300" stroke="#888780" stroke-width="1" marker-end="url(#arr)"/>
+<!-- 16 -->
+<rect x="44" y="1300" width="244" height="48" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text x="166" y="1320" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">16. Dashboard reporting</text>
+<text x="166" y="1336" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">OSA, compliance, KeyDash 2.0</text>
+<path d="M44 1324 L28 1324 L28 212 L44 212" fill="none" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+<text x="22" y="768" font-size="8" fill="#B4B2A9" text-anchor="middle" transform="rotate(-90,22,768)">reporting loop</text>
+<text x="350" y="1490" font-size="9" fill="#9CA0AB" text-anchor="middle">CA&amp;S Digital · IR Project · 21 April 2026</text>
+</svg>
+  </div>
+</div><!-- /pane-flow -->
+
+
+<!-- ===== TAB 3: GANTT ===== -->
+<div class="pane" id="pane-gantt">
+
+  <div class="gantt-hdr">
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#555;margin-bottom:6px;">CA&amp;S Digital · IR Project</div>
+      <h2>Project Gantt</h2>
+      <p>Apr 2026 — Jul 2026 · Filter by status or team</p>
+    </div>
+    <div class="gcounts">
+      <div class="gcount t"><div class="n">36</div><div class="l">Tasks</div></div>
+      <div class="gcount a"><div class="n" style="color:#6DB3F2;">3</div><div class="l">Active</div></div>
+      <div class="gcount o"><div class="n" style="color:#F5C842;">32</div><div class="l">Open</div></div>
+    </div>
+  </div>
+
+  <div class="gfilters">
+    <span class="flbl">Status</span>
+    <button class="fbtn active" onclick="filterStatus('all',this)">All</button>
+    <button class="fbtn" onclick="filterStatus('open',this)">Open</button>
+    <button class="fbtn" onclick="filterStatus('active',this)">In progress</button>
+    <button class="fbtn" onclick="filterStatus('blocked',this)">Blocked</button>
+    <button class="fbtn" onclick="filterStatus('done',this)">Done</button>
+    <span class="flbl" style="margin-left:12px;">Team</span>
+    <button class="fbtn cas" onclick="filterTeam('cas',this)">CA&amp;S</button>
+    <button class="fbtn mac" onclick="filterTeam('mac',this)">Mac</button>
+    <button class="fbtn nlb" onclick="filterTeam('nlb',this)">NLB</button>
+    <button class="fbtn key" onclick="filterTeam('key',this)">Key</button>
+    <button class="fbtn pns" onclick="filterTeam('pns',this)">PnS</button>
+    <button class="fbtn" onclick="filterTeam('all',this)">All</button>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="gphase">
+    <div class="phdr"><div class="pnum">1</div><div class="pname">Phase 1 — Data &amp; Ranging</div><div class="pline"></div></div>
+    <div class="gtask dn" data-status="done" data-team="key pns cas"><div><div class="tname">Finalise Checkers ranging list</div><div class="tsub"><span class="tdot key"></span>Jordan <span class="tdot pns"></span>Camelle</div></div><span class="badge resolved">Done</span><span class="due ok">21 Apr</span></div>
+    <div class="gtask dn" data-status="done" data-team="key pns cas"><div><div class="tname">Finalise PnP ranging list</div><div class="tsub"><span class="tdot key"></span>Jordan <span class="tdot pns"></span>Camelle</div></div><span class="badge resolved">Done</span><span class="due ok">21 Apr</span></div>
+    <div class="gtask" data-status="active" data-team="key nlb"><div><div class="tname">Load Neurolabs SKU + category into Keystone ranging list</div><div class="tsub"><span class="tdot key"></span>Jordan <span class="tdot nlb"></span>Toby</div></div><span class="badge progress">Active</span><span class="due hot">This week</span></div>
+    <div class="gtask" data-status="open" data-team="key pns"><div><div class="tname">Clarify 3M vs Supergroup on Checkers — confirm with Camelle</div><div class="tsub"><span class="tdot key"></span>Jordan</div></div><span class="badge open">Open</span><span class="due hot">ASAP</span></div>
+    <div class="gtask" data-status="open" data-team="cas pns"><div><div class="tname">Cerebos (Sarah Boss) data access — revisit when path confirmed</div><div class="tsub"><span class="tdot cas"></span>Gareth <span class="tdot pns"></span>Camelle</div></div><span class="badge deferred">Deferred</span><span class="due">TBD</span></div>
+    <div class="gtask" data-status="open" data-team="cas key pns"><div><div class="tname">Define ranging list refresh process (monthly+ update cadence)</div><div class="tsub"><span class="tdot cas"></span>Gareth <span class="tdot key"></span>Jordan</div></div><span class="badge open">Open</span><span class="due">May</span></div>
+    <div class="gtask" data-status="open" data-team="cas"><div><div class="tname">Meet James — confirm PnP FTP access and Article Master file</div><div class="tsub"><span class="tdot cas"></span>Gareth + James</div></div><span class="badge open">Open</span><span class="due">17 Apr</span></div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="gphase">
+    <div class="phdr"><div class="pnum">2</div><div class="pname">Phase 2 — Catalogue &amp; Category Alignment</div><div class="pline"></div></div>
+    <div class="gtask dn" data-status="done" data-team="cas key pns nlb"><div><div class="tname">Agree to use Neurolabs catalogue as-is — GAP 4 + GAP 6 decision</div><div class="tsub"><span class="tdot cas"></span>Gareth <span class="tdot key"></span>Jordan <span class="tdot pns"></span>Ruan</div></div><span class="badge resolved">Done</span><span class="due ok">21 Apr</span></div>
+    <div class="gtask" data-status="active" data-team="nlb"><div><div class="tname">Toby to confirm latest catalogue export sent to Jordan</div><div class="tsub"><span class="tdot nlb"></span>Toby</div></div><span class="badge progress">Active</span><span class="due hot">ASAP</span></div>
+    <div class="gtask bk" data-status="blocked" data-team="key"><div><div class="tname">Build example Keystone API response: Category &gt; Principal &gt; Items (GAP 7)</div><div class="tsub"><span class="tdot key"></span>Jordan — blocked until catalogue loaded in Keystone</div></div><span class="badge blocked">Blocked</span><span class="due hot">This week</span></div>
+    <div class="gtask" data-status="open" data-team="pns nlb key"><div><div class="tname">Background catalogue cleanup — duplicates, missing barcodes, category mismatches</div><div class="tsub"><span class="tdot pns"></span>Tina <span class="tdot nlb"></span>Toby <span class="tdot key"></span>Cameron</div></div><span class="badge open">Open</span><span class="due">Ongoing</span></div>
+    <div class="gtask" data-status="open" data-team="cas key pns"><div><div class="tname">2-hour end-to-end session — master data ownership, category process (5 May)</div><div class="tsub"><span class="tdot cas"></span>Gareth hosts · Jordan, Cameron, Ruan, Camelle</div></div><span class="badge open">Open</span><span class="due">5 May</span></div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="gphase">
+    <div class="phdr"><div class="pnum">3</div><div class="pname">Phase 3 — App &amp; Infrastructure</div><div class="pline"></div></div>
+    <div class="gtask" data-status="active" data-team="mac"><div><div class="tname">GCP app release — blur/tilt rejection, restores image quality (GAP 2)</div><div class="tsub"><span class="tdot mac"></span>Christo <span class="tdot mac"></span>Sean</div></div><span class="badge progress">Active</span><span class="due hot">W/C 20 Apr</span></div>
+    <div class="gtask" data-status="open" data-team="mac"><div><div class="tname">Mac Mobile server stability monitoring — Vodacom infrastructure (GAP 3)</div><div class="tsub"><span class="tdot mac"></span>Sean</div></div><span class="badge open">Open</span><span class="due">Ongoing</span></div>
+    <div class="gtask" data-status="open" data-team="mac key pns"><div><div class="tname">Duplicate store ID cleanup — remove stale PNS IDs, use AIS only (GAP 8)</div><div class="tsub"><span class="tdot key"></span>Jordan <span class="tdot mac"></span>Mac Mobile <span class="tdot pns"></span>PnS</div></div><span class="badge open">Open</span><span class="due">W/C 20 Apr</span></div>
+    <div class="gtask" data-status="open" data-team="mac"><div><div class="tname">Implement zero suppression in Mac Mobile — FOM sees actionals only (GAP 9)</div><div class="tsub"><span class="tdot mac"></span>Christo</div></div><span class="badge open">Open</span><span class="due">W/C 20 Apr</span></div>
+    <div class="gtask" data-status="open" data-team="mac key"><div><div class="tname">Confirm metadata fields in enriched JSON to Keystone (store ID, rep, form/cat, principal)</div><div class="tsub"><span class="tdot mac"></span>Christo + <span class="tdot key"></span>Jordan</div></div><span class="badge open">Open</span><span class="due">20 Apr</span></div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="gphase">
+    <div class="phdr"><div class="pnum">4</div><div class="pname">Phase 4 — Pilot Readiness</div><div class="pline"></div></div>
+    <div class="gtask" data-status="open" data-team="pns cas"><div><div class="tname">Camelle: daily operational status doc — all events under 5 min = system working</div><div class="tsub"><span class="tdot pns"></span>Camelle</div></div><span class="badge open">Open</span><span class="due">Daily</span></div>
+    <div class="gtask" data-status="open" data-team="cas nlb"><div><div class="tname">Confirm Neurolabs billing: per photo vs per match (dual-retailer budget impact)</div><div class="tsub"><span class="tdot cas"></span>Gareth <span class="tdot nlb"></span>Toby</div></div><span class="badge open">Open</span><span class="due">Before Andrew update</span></div>
+    <div class="gtask" data-status="open" data-team="cas key"><div><div class="tname">Weekly Andrew Dawson reporting — full IR project status</div><div class="tsub"><span class="tdot cas"></span>Gareth</div></div><span class="badge open">Open</span><span class="due">Every Friday</span></div>
+    <div class="gtask" data-status="open" data-team="nlb cas"><div><div class="tname">Clarify Neurolabs handling of photos where products have no ranging list</div><div class="tsub"><span class="tdot cas"></span>Gareth <span class="tdot nlb"></span>Toby</div></div><span class="badge open">Open</span><span class="due">Ongoing</span></div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="gphase">
+    <div class="phdr"><div class="pnum">5</div><div class="pname">Phase 5 — Stress Test &amp; Scale</div><div class="pline"></div></div>
+    <div class="gtask" data-status="open" data-team="cas mac key nlb pns"><div><div class="tname">Stress test — 1,452 stores, 120 Field Operations Managers</div><div class="tsub">All teams</div></div><span class="badge open">Open</span><span class="due">June 2026</span></div>
+    <div class="gtask" data-status="open" data-team="cas mac key nlb pns"><div><div class="tname">Full deployment and volume ramp-up</div><div class="tsub">All teams</div></div><span class="badge open">Open</span><span class="due">July 2026</span></div>
+  </div>
+
+</div><!-- /pane-gantt -->
+
+<script>
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  el.classList.add('active');
+}
+
+let activeStatus = 'all', activeTeam = 'all';
+
+function filterStatus(s, btn) {
+  activeStatus = s;
+  document.querySelectorAll('[onclick*="filterStatus"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  apply();
+}
+
+function filterTeam(t, btn) {
+  activeTeam = t;
+  document.querySelectorAll('[onclick*="filterTeam"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  apply();
+}
+
+function apply() {
+  document.querySelectorAll('.gtask').forEach(task => {
+    const sOk = activeStatus === 'all' || task.dataset.status === activeStatus;
+    const tOk = activeTeam === 'all' || (task.dataset.team || '').includes(activeTeam);
+    task.dataset.hidden = (!sOk || !tOk) ? 'true' : 'false';
+  });
+}
+</script>
+
+<!-- ===== TAB 4: APRIL STORES ===== -->
+<div class="pane" id="pane-stores">
+
+  <div class="g4" style="margin-bottom:24px;">
+    <div class="stat"><div class="stat-num g">80</div><div class="stat-lbl">Total stores</div></div>
+    <div class="stat"><div class="stat-num b">42</div><div class="stat-lbl">Checkers</div></div>
+    <div class="stat"><div class="stat-num a">23</div><div class="stat-lbl">Pick n Pay</div></div>
+    <div class="stat"><div class="stat-num r">14</div><div class="stat-lbl">Shoprite</div></div>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;">
+    <span class="flbl">ROM</span>
+    <button class="fbtn active" onclick="filterStores('rom','all',this)">All ROMs</button>
+    <button class="fbtn" onclick="filterStores('rom','Eric Mahlangu',this)">Eric Mahlangu</button>
+    <button class="fbtn" onclick="filterStores('rom','Rendani Mavhungu',this)">Rendani Mavhungu</button>
+    <button class="fbtn" onclick="filterStores('rom','Refilwe Selwana',this)">Refilwe Selwana</button>
+    <button class="fbtn" onclick="filterStores('rom','Melusi Nxumalo',this)">Melusi Nxumalo</button>
+    <button class="fbtn" onclick="filterStores('rom','White Nkosinkulu',this)">White Nkosinkulu</button>
+    <button class="fbtn" onclick="filterStores('rom','Bernadine Oosthuizen',this)">Bernadine Oosthuizen</button>
+    <button class="fbtn" onclick="filterStores('rom','Patrick Booysen',this)">Patrick Booysen</button>
+    <button class="fbtn" onclick="filterStores('rom','Desigan Moodley',this)">Desigan Moodley</button>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;">
+    <span class="flbl">Retailer</span>
+    <button class="fbtn active" onclick="filterStores('ret','all',this)">All</button>
+    <button class="fbtn" onclick="filterStores('ret','Checkers',this)">Checkers</button>
+    <button class="fbtn" onclick="filterStores('ret','PnP',this)">PnP</button>
+    <button class="fbtn" onclick="filterStores('ret','Shoprite',this)">Shoprite</button>
+  </div>
+
+  <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+    <input type="text" id="store-search" placeholder="Search store name..." oninput="searchStores(this.value)" style="flex:1;max-width:360px;padding:8px 12px;font-size:13px;border:0.5px solid var(--border);border-radius:8px;background:white;color:var(--dark);">
+    <span id="store-count" style="font-size:12px;color:var(--muted);font-weight:600;">Showing 80 stores</span>
+  </div>
+
+  <table id="stores-table" style="margin-bottom:24px;">
+    <thead>
+      <tr>
+        <th style="width:42%;">Store</th>
+        <th>ROM</th>
+        <th style="width:90px;">Retailer</th>
+        <th style="width:80px;">Opt ID</th>
+      </tr>
+    </thead>
+    <tbody id="stores-tbody"></tbody>
+  </table>
+
+</div><!-- /pane-stores -->
+
+<script>
+const STORES = [{"store":"PnP Corp Dainfern - GC79","rom":"Eric Mahlangu","opt_id":"2981","retailer":"PnP"},{"store":"Checkers Leaping Frog - 42559","rom":"Eric Mahlangu","opt_id":"12074","retailer":"Checkers"},{"store":"Checkers FX Dainfern-166658","rom":"Eric Mahlangu","opt_id":"18513","retailer":"Checkers"},{"store":"PnP Corp Lonehill - GC11","rom":"Eric Mahlangu","opt_id":"3068","retailer":"PnP"},{"store":"Checkers Pineslopes - 38227","rom":"Eric Mahlangu","opt_id":"1883","retailer":"Checkers"},{"store":"Checkers FX Design Quarter - 79461","rom":"Eric Mahlangu","opt_id":"11018","retailer":"Checkers"},{"store":"Checkers FX Jukskei Park - 99360","rom":"Eric Mahlangu","opt_id":"1793","retailer":"Checkers"},{"store":"Checkers Hyper FX Fourways - 7311","rom":"Eric Mahlangu","opt_id":"1773","retailer":"Checkers"},{"store":"PnP Corp Fourways Mall - GD16","rom":"Eric Mahlangu","opt_id":"2996","retailer":"PnP"},{"store":"PnP Corp Fourways - GC24","rom":"Eric Mahlangu","opt_id":"2995","retailer":"PnP"},{"store":"Shoprite Midrand - 2727","rom":"Rendani Mavhungu","opt_id":"3724","retailer":"Shoprite"},{"store":"Shoprite Ebony Park - 54944","rom":"Rendani Mavhungu","opt_id":"3554","retailer":"Shoprite"},{"store":"Shoprite Kaalfontein - 96338","rom":"Rendani Mavhungu","opt_id":"3590","retailer":"Shoprite"},{"store":"Shoprite Clayville - 38594","rom":"Rendani Mavhungu","opt_id":"3538","retailer":"Shoprite"},{"store":"PnP Hyp Woodmead - HC06","rom":"Rendani Mavhungu","opt_id":"3410","retailer":"PnP"},{"store":"Checkers Maxwell Corner (Waterfall) - 38722","rom":"Rendani Mavhungu","opt_id":"1864","retailer":"Checkers"},{"store":"Checkers Stonehills - 165076","rom":"Rendani Mavhungu","opt_id":"11544","retailer":"Checkers"},{"store":"Checkers Eden Terrence -165092","rom":"Rendani Mavhungu","opt_id":"11543","retailer":"Checkers"},{"store":"PnP Hyp Norwood - HC05","rom":"Rendani Mavhungu","opt_id":"3405","retailer":"PnP"},{"store":"Checkers FX Neighbourhood - 83719","rom":"Rendani Mavhungu","opt_id":"1751","retailer":"Checkers"},{"store":"PnP Hyp Centurion - HC18","rom":"Refilwe Selwana","opt_id":"3392","retailer":"PnP"},{"store":"Checkers Centurion Lifestyle - 55013","rom":"Refilwe Selwana","opt_id":"1731","retailer":"Checkers"},{"store":"PnP Corp Doringkloof - NC03","rom":"Refilwe Selwana","opt_id":"2988","retailer":"PnP"},{"store":"Shoprite Lyttelton - 741","rom":"Refilwe Selwana","opt_id":"3689","retailer":"Shoprite"},{"store":"Checkers FX Clubview - 83785","rom":"Refilwe Selwana","opt_id":"1749","retailer":"Checkers"},{"store":"Checkers Jean Avenue - 40989","rom":"Refilwe Selwana","opt_id":"1792","retailer":"Checkers"},{"store":"Checkers FX Thatchfield - 16546","rom":"Refilwe Selwana","opt_id":"11016","retailer":"Checkers"},{"store":"Checkers Mall @ 55 - 83751","rom":"Refilwe Selwana","opt_id":"11131","retailer":"Checkers"},{"store":"Checkers Kyalami - 58150","rom":"Refilwe Selwana","opt_id":"1800","retailer":"Checkers"},{"store":"PnP QualiSave Midrand - GC26","rom":"Refilwe Selwana","opt_id":"3083","retailer":"PnP"},{"store":"Checkers Scottburgh - 6755","rom":"Melusi Nxumalo","opt_id":"592","retailer":"Checkers"},{"store":"PnP Corp Scottburgh - KC30","rom":"Melusi Nxumalo","opt_id":"949","retailer":"PnP"},{"store":"Checkers Doonside Amanzimtoti - 979","rom":"Melusi Nxumalo","opt_id":"543","retailer":"Checkers"},{"store":"Checkers FX Athlone Park - 79445","rom":"Melusi Nxumalo","opt_id":"7973","retailer":"Checkers"},{"store":"Shoprite Amanzimtoti - 6690","rom":"Melusi Nxumalo","opt_id":"1142","retailer":"Shoprite"},{"store":"Checkers Hyper Galleria - 54677","rom":"Melusi Nxumalo","opt_id":"550","retailer":"Checkers"},{"store":"PnP Hyp South Coast - KC27","rom":"Melusi Nxumalo","opt_id":"1029","retailer":"PnP"},{"store":"PnP QualiSave Kwamnyandu Mall Umlazi - KC36","rom":"Melusi Nxumalo","opt_id":"904","retailer":"PnP"},{"store":"Shoprite Kwamnyandu Mall Umlazi - 38861","rom":"Melusi Nxumalo","opt_id":"1164","retailer":"Shoprite"},{"store":"Shoprite Isipingo - 8008","rom":"Melusi Nxumalo","opt_id":"1158","retailer":"Shoprite"},{"store":"Checkers Hyper Parkdene - 7450","rom":"White Nkosinkulu","opt_id":"1768","retailer":"Checkers"},{"store":"Checkers Sunward Park - 36136","rom":"White Nkosinkulu","opt_id":"1906","retailer":"Checkers"},{"store":"PnP Corp Sunward Park - GC10","rom":"White Nkosinkulu","opt_id":"3125","retailer":"PnP"},{"store":"Checkers Hyper Mall Of Carnival - 30326","rom":"White Nkosinkulu","opt_id":"1780","retailer":"Checkers"},{"store":"Checkers Selcourt - 52316","rom":"White Nkosinkulu","opt_id":"1900","retailer":"Checkers"},{"store":"Checkers Springs Mall - 38277","rom":"White Nkosinkulu","opt_id":"1903","retailer":"Checkers"},{"store":"PnP Corp Carnival Mall - GC55","rom":"White Nkosinkulu","opt_id":"2970","retailer":"PnP"},{"store":"Shoprite Commissioner Street - 7468","rom":"White Nkosinkulu","opt_id":"3540","retailer":"Shoprite"},{"store":"Checkers The Reef - 81563","rom":"White Nkosinkulu","opt_id":"1908","retailer":"Checkers"},{"store":"Checkers CX Lambton - 164119","rom":"White Nkosinkulu","opt_id":"11483","retailer":"Checkers"},{"store":"Checkers St Georges Square - 6129","rom":"Bernadine Oosthuizen","opt_id":"5109","retailer":"Checkers"},{"store":"PnP Corp George - EC06","rom":"Bernadine Oosthuizen","opt_id":"5356","retailer":"PnP"},{"store":"Checkers Heiderand - 6331","rom":"Bernadine Oosthuizen","opt_id":"5096","retailer":"Checkers"},{"store":"Shoprite Kwanonqaba Mb - 58647","rom":"Bernadine Oosthuizen","opt_id":"5444","retailer":"Shoprite"},{"store":"Checkers York Street Centre - 57073","rom":"Bernadine Oosthuizen","opt_id":"5116","retailer":"Checkers"},{"store":"Shoprite George (Eastern Cape) - 1551","rom":"Bernadine Oosthuizen","opt_id":"5440","retailer":"Shoprite"},{"store":"PnP Corp Langeberg Mall Mosselbay - EC02","rom":"Bernadine Oosthuizen","opt_id":"5360","retailer":"PnP"},{"store":"Shoprite Thembalethu - 36178","rom":"Bernadine Oosthuizen","opt_id":"5459","retailer":"Shoprite"},{"store":"Checkers Hyper Eden Meander George - 91867","rom":"Bernadine Oosthuizen","opt_id":"5098","retailer":"Checkers"},{"store":"PnP Corp Garden Route Mall George - EC07","rom":"Bernadine Oosthuizen","opt_id":"5355","retailer":"PnP"},{"store":"Checkers Gordon's Bay - 82802","rom":"Patrick Booysen","opt_id":"4739","retailer":"Checkers"},{"store":"Checkers FX Vergelegen - 39142 - G693","rom":"Patrick Booysen","opt_id":"4763","retailer":"Checkers"},{"store":"Checkers Somerset West - 1569","rom":"Patrick Booysen","opt_id":"4759","retailer":"Checkers"},{"store":"Shoprite Somerset West - 6420","rom":"Patrick Booysen","opt_id":"5045","retailer":"Shoprite"},{"store":"PnP Corp Waterstone - WC36","rom":"Patrick Booysen","opt_id":"4959","retailer":"PnP"},{"store":"PnP Hyp Somerset Mall - WC05","rom":"Patrick Booysen","opt_id":"4948","retailer":"PnP"},{"store":"Checkers Somerset Mall - 160830","rom":"Patrick Booysen","opt_id":"11459","retailer":"Checkers"},{"store":"Checkers Hyper Somerset West (Helderberg Mall) - 39168","rom":"Patrick Booysen","opt_id":"4742","retailer":"Checkers"},{"store":"Checkers Paardevlei - 15621","rom":"Patrick Booysen","opt_id":"11674","retailer":"Checkers"},{"store":"Checkers FX Sitari - 83549","rom":"Patrick Booysen","opt_id":"4758","retailer":"Checkers"},{"store":"PnP Corp Umhlanga Lighthouse - KC62","rom":"Desigan Moodley","opt_id":"1008","retailer":"PnP"},{"store":"PnP Corp Crescent (Umhlanga) - KC03","rom":"Desigan Moodley","opt_id":"900","retailer":"PnP"},{"store":"PnP Corp Cornubia Mall - KC37","rom":"Desigan Moodley","opt_id":"899","retailer":"PnP"},{"store":"PnP Corp La Lucia - KC05","rom":"Desigan Moodley","opt_id":"905","retailer":"PnP"},{"store":"Clicks Oceans Mall Umhlnga - 2168","rom":"Desigan Moodley","opt_id":"10953","retailer":"Other"},{"store":"Checkers Virginia Circle - 36306","rom":"Desigan Moodley","opt_id":"597","retailer":"Checkers"},{"store":"Checkers Cornubia Mall - 34702","rom":"Desigan Moodley","opt_id":"541","retailer":"Checkers"},{"store":"Checkers CX Ocean Dunes Sibaya -  016318","rom":"Desigan Moodley","opt_id":"11556","retailer":"Checkers"},{"store":"Checkers FX La Lucia Mall - 169973","rom":"Desigan Moodley","opt_id":"15918","retailer":"Checkers"},{"store":"Shoprite Verulam Highway - 39273","rom":"Desigan Moodley","opt_id":"1240","retailer":"Shoprite"}];
+
+const RET_COLORS = {Checkers:'#085041',PnP:'#0C447C',Shoprite:'#633806',Other:'#444'};
+const RET_BG = {Checkers:'#E1F5EE',PnP:'#E6F1FB',Shoprite:'#FAEEDA',Other:'#F1EFE8'};
+
+let sRom = 'all', sRet = 'all', sSearch = '';
+
+function renderStores() {
+  const tbody = document.getElementById('stores-tbody');
+  const filtered = STORES.filter(s =>
+    (sRom === 'all' || s.rom === sRom) &&
+    (sRet === 'all' || s.retailer === sRet) &&
+    (sSearch === '' || s.store.toLowerCase().includes(sSearch.toLowerCase()) || s.rom.toLowerCase().includes(sSearch.toLowerCase()))
+  );
+  document.getElementById('store-count').textContent = `Showing ${filtered.length} store${filtered.length !== 1 ? 's' : ''}`;
+  tbody.innerHTML = filtered.map(s => `
+    <tr>
+      <td style="font-size:12px;font-weight:500;">${s.store}</td>
+      <td style="font-size:12px;color:#555;">${s.rom}</td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:${RET_BG[s.retailer]||'#f5f5f5'};color:${RET_COLORS[s.retailer]||'#444'}">${s.retailer}</span></td>
+      <td style="font-size:12px;color:#888;font-family:monospace;">${s.opt_id}</td>
+    </tr>`).join('');
+}
+
+function filterStores(type, val, btn) {
+  if (type === 'rom') {
+    sRom = val;
+    document.querySelectorAll('#pane-stores .gfilters button, #pane-stores > div:first-of-type button, #pane-stores > div:nth-of-type(2) button').forEach(b => b.classList.remove('active'));
+  } else {
+    sRet = val;
+  }
+  btn.classList.add('active');
+  renderStores();
+}
+
+function searchStores(val) { sSearch = val; renderStores(); }
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  el.classList.add('active');
+  if (tab === 'stores') renderStores();
+}
+
+let activeStatus = 'all', activeTeam = 'all';
+
+function filterStatus(s, btn) {
+  activeStatus = s;
+  document.querySelectorAll('[onclick*="filterStatus"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  apply();
+}
+
+function filterTeam(t, btn) {
+  activeTeam = t;
+  document.querySelectorAll('[onclick*="filterTeam"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  apply();
+}
+
+function apply() {
+  document.querySelectorAll('.gtask').forEach(task => {
+    const sOk = activeStatus === 'all' || task.dataset.status === activeStatus;
+    const tOk = activeTeam === 'all' || (task.dataset.team || '').includes(activeTeam);
+    task.dataset.hidden = (!sOk || !tOk) ? 'true' : 'false';
+  });
+}
+</script>
+</body>
+</html>
