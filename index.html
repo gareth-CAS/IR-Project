@@ -87,6 +87,7 @@ tr:hover td{background:#fafaf8}
 .alert.red{background:#FCEBEB;border-left:3px solid #E24B4A;color:#7A1C1C}
 .alert.blue{background:#E6F1FB;border-left:3px solid #185FA5;color:#0C447C}
 .alert.green{background:#E1F5EE;border-left:3px solid #0F6E56;color:#085041}
+.alert.amber{background:#FAEEDA;border-left:3px solid #854F0B;color:#633806}
 .alert strong{font-weight:700}
 .leg-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding:10px 14px;background:#f5f4f0;border-radius:8px}
 .leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#444}
@@ -112,7 +113,7 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
 <div class="topbar">
   <div>
     <div class="topbar-title">CA&amp;S Digital &middot; IR Project</div>
-    <div class="topbar-meta">Updated 5 May 2026</div>
+    <div class="topbar-meta">Updated 12 May 2026 &middot; 3pm check-in agenda confirmed</div>
   </div>
   <div class="topbar-alert">&#9888; IMAGE ROTATION BUG &mdash; BLOCKING AI ACCURACY</div>
 </div>
@@ -137,85 +138,86 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
     <div class="sec-title">What this project is</div>
     <p class="intro">The IR project enables Field Operations Managers (FOMs) to photograph retail shelves using the <strong>Mac Mobile</strong> app. Photos are processed by <strong>Neurolabs</strong> AI to detect products on shelf. Results are matched against ranging lists in <strong>Keystone</strong> and returned to the FOM as a structured action list: <strong>Principal &gt; Category &gt; Items</strong>. The goal is on-shelf availability (OSA) and compliance reporting at scale across Checkers and Pick n Pay stores.</p>
     <div class="pilot">80 stores &middot; 8 FOMs active &middot; Scale up May/June 2026 &middot; Stress test 1 July 2026 (1,400+ stores, ~100 FOMs)</div>
-    <p class="status-line">Status as at 5 May 2026 (IR Project check-in, 3pm, 15 attendees): reporting dashboard now live on AIS backend. <strong>Critical image rotation bug identified &mdash; 60&ndash;80% of images arriving at Neurolabs sideways, blocking all accuracy work.</strong> Category API and Not Applicable flag in progress at Keystone (target end of week). Product duplication bug on Mac Mobile v15 managed with direct workaround; v18 UAT starts Thursday. Sir Fruits contract lost &mdash; last day 30 June.</p>
+    <p class="status-line">Status as at 12 May 2026 (3pm check-in): Jordan deployed both the Category API and the Not Applicable (Option 3) response to Keystone production on 7 May. Tshego began Mac Mobile implementation this morning &mdash; double-nesting bug resolved, string/integer ID issue still being closed. Product file upload process confirmed this morning. <strong>Image rotation bug still open and blocking all AI accuracy work.</strong> Signed contracts outstanding from Morne. Andrew Dawson has flagged the project is behind schedule and all actions must be treated as highest priority.</p>
   </div>
 
   <div class="sec">
-    <div class="sec-title">Key updates from IR check-in &mdash; 5 May 2026, 3pm</div>
+    <div class="sec-title">3pm call agenda &mdash; run through in order &mdash; 12 May 2026</div>
     <div class="updates">
 
+      <div class="upd inprog">
+        <span class="upd-badge b-inprog">Item 1 &mdash; Tshego / Jordan</span>
+        <h3>Category API + Not Applicable response &mdash; close today</h3>
+        <p>Jordan deployed both the Category API (<code>operational_categories</code> in <code>mac_info</code>) and the Not Applicable / Option 3 response to <strong>Keystone production on 7 May</strong>. Christo handed to Tshego on 8 May to implement the Mac Mobile side &mdash; target was Monday 11 May. This morning Tshego began sending &mdash; two bugs surfaced. <strong>Bug 1 (double-nesting): resolved 10:25am.</strong> Bug 2 (category ID arriving as string instead of integer, causing JSON parsing error in Keystone): actioned by Tshego but Jordan still seeing strings as of 11:30am. Update needed at 3pm: is the integer fix confirmed live? If not, Tshego and Jordan to agree on direction &mdash; send as integer or Keystone accepts strings. Both Category API and Not Applicable response must be confirmed end-to-end live today.</p>
+      </div>
+
       <div class="upd critical">
-        <span class="upd-badge b-critical">Critical &mdash; New 5 May</span>
-        <h3>Image rotation bug &mdash; blocking Neurolabs accuracy</h3>
-        <p>60&ndash;80% of images arriving at Neurolabs are rotated. Suspected EXIF metadata issue from device encoding &mdash; common when JPEG rotational data is not correctly processed. Blocking all accuracy improvement and reference image gathering. GCP blur/tilt rejection is live but does not catch rotation. <strong>Romeo has escalated urgently to app developers.</strong> Toby monitoring incoming images and will notify team as soon as correct images start arriving. Until resolved, Neurolabs cannot generate accuracy results or improve the model.</p>
+        <span class="upd-badge b-critical">Item 2 &mdash; Romeo / Toby &mdash; Critical</span>
+        <h3>Image rotation bug &mdash; still blocking all AI accuracy</h3>
+        <p>60&ndash;80% of images arriving at Neurolabs are rotated. Suspected EXIF metadata issue from device encoding. Blocking all accuracy improvement and reference image gathering. GCP blur/tilt rejection does not catch rotation. No resolution confirmed since the 5 May check-in. This is the single biggest blocker to July 1 stress test readiness. Update needed at 3pm: status of escalation to app developers, root cause identified, and fix timeline.</p>
       </div>
 
       <div class="upd issue">
-        <span class="upd-badge b-issue">Issue &mdash; Priority</span>
-        <h3>Product duplication bug &mdash; Mac Mobile v15</h3>
-        <p>Bug confirmed in v15: updating an existing product code creates a new duplicate instead of overwriting. All PnS uploads paused. <strong>Workaround agreed:</strong> PnS sends product change files directly to Romeo/Christo (bypass Mac Mobile help desk &mdash; too slow for time-sensitive updates). Fix requires upgrade to v18 &mdash; UAT testing starts Thursday when new QA link received, estimated 4&ndash;5 weeks. <strong>Sean to lead workflow definition meeting</strong> with Ruan, Tina and Christo to lock in the interim process.</p>
-      </div>
-
-      <div class="upd inprog">
-        <span class="upd-badge b-inprog">In Progress &mdash; This week</span>
-        <h3>Category API + Not Applicable flag &mdash; Keystone delivering</h3>
-        <p>GAP 6 + GAP 7 + GAP 9. Luke confirmed: Category API tentatively this week, Not Applicable / null response (Option 3) targeting COB Wednesday. Mac Mobile needs 1 day to implement once received &mdash; target live by end of week. <strong>Cameron to send confirmed delivery dates by email today</strong> &mdash; no open-ended &ldquo;this week&rdquo; commitments. Unblocks FOMs seeing clean category views and removes zero confusion in the field.</p>
+        <span class="upd-badge b-issue">Item 3 &mdash; Morne / Sean &mdash; Outstanding</span>
+        <h3>Signed contracts &mdash; still awaited</h3>
+        <p>Sean raised this on 5 May. Andrew Dawson asked Morne directly: &ldquo;where are we with the signed contracts please?&rdquo; No reply. Both the IR project contract and the Mac Mobile / PnS contract are outstanding, as is the PO for catalogue development moving from Neurolabs to Mac Mobile. Update needed at 3pm: what is blocking sign-off and when will they be done?</p>
       </div>
 
       <div class="upd confirmed">
-        <span class="upd-badge b-confirmed">Live &mdash; New 5 May</span>
-        <h3>Reporting dashboard now live on AIS backend</h3>
-        <p>Romeo confirmed submission and results report is live on AIS backend (Image Recognition reporting category). FOMs can view filtered reports and click through to what the rep saw in store. <strong>Tina to give Morne and Camelle access permissions today.</strong> PnS team were not aware this existed &mdash; walkthrough planned for tomorrow&rsquo;s in-person meeting at PnS (Sean dialling in).</p>
+        <span class="upd-badge b-confirmed">Item 4 &mdash; Tina / Romeo / Tshego / Christo</span>
+        <h3>Product file upload backlog &mdash; process confirmed this morning</h3>
+        <p>Process confirmed by Romeo this morning: PnS sends files directly to Romeo, Tshego and Christo &mdash; 1 file per email, indicate which system applies, set inactive products to 0 in the status column. Four principals have a backlog: <strong>Premier, Astral, JDE, Miami.</strong> Tina confirmed files will be sent shortly. Update needed at 3pm: have files been sent and actioned?</p>
+      </div>
+
+      <div class="upd issue">
+        <span class="upd-badge b-issue">Item 5 &mdash; Tina / Ruan</span>
+        <h3>Mac Mobile v18 UAT &mdash; confirmation needed</h3>
+        <p>QA instances delivered by Romeo on 7 May as promised. Tshego had flagged deploy by Monday 11 May. Workaround (direct file upload to Romeo/Tshego/Christo) confirmed this morning. Fix requires full v18 upgrade &mdash; estimated 4&ndash;5 weeks from UAT start. Update needed at 3pm: has UAT formally started and what is the expected completion date?</p>
+      </div>
+
+      <div class="upd progress">
+        <span class="upd-badge b-progress">Item 6 &mdash; Toby / Jordan / Gareth</span>
+        <h3>Pricing &amp; Promos &mdash; future data requirements</h3>
+        <p>Use cases technically built at Keystone. Requires data feeds to activate: RSP pricing list per principal and promotional broadsheets from PnS on their existing 6-week cycle. Update needed at 3pm: what data is still outstanding per principal, who owns the feed from PnS, and what is the timeline to go live?</p>
+      </div>
+
+      <div class="upd progress">
+        <span class="upd-badge b-progress">Standing item</span>
+        <h3>POC &mdash; 80 stores, 8 FOMs, April store list continues</h3>
+        <p>8 FOMs each assigned 10 stores = 80 stores for May testing. April store list confirmed to continue by Tina. Target: 40,000 images submitted H1 to cover Neurolabs billing commitment. <strong>Stress test target: 1 July 2026, ~1,400 stores, ~100 FOMs.</strong> Andrew Dawson has flagged the project is behind schedule &mdash; all actions must be treated as highest priority.</p>
       </div>
 
       <div class="upd warning">
-        <span class="upd-badge b-warning">Decision &mdash; 5 May</span>
+        <span class="upd-badge b-warning">Standing item &mdash; 30 Jun deadline</span>
         <h3>Sir Fruits &mdash; contract lost, deactivation agreed</h3>
-        <p>Morne confirmed Pack &amp; Stack lost the Sir Fruits contract. <strong>Last day: 30 June 2026.</strong> Sir Fruits continues in the POC until then. SKUs to be <em>deactivated</em> (not deleted) in Neurolabs catalog after 30 June &mdash; kept inactive for potential competitor analysis. Cameron flagged this data could be used to approach similar clients. Tina to begin deactivation once Gareth and Toby confirm approach.</p>
-      </div>
-
-      <div class="upd progress">
-        <span class="upd-badge b-progress">Confirmed</span>
-        <h3>Pricing &amp; Promos &mdash; call Thursday, use cases nearly ready</h3>
-        <p>Use cases technically built at Keystone. Requires data feeds to activate: RSP pricing list per principal and promotional broadsheets from PnS. <strong>Call Thursday afternoon:</strong> Toby + Jordan/Luke + Gareth. Jordan back from leave tomorrow. Approach confirmed: POS price vs expected RSP check, plus promo broadsheet upload from PnS on their existing 6-week cycle for grid-based promo compliance.</p>
-      </div>
-
-      <div class="upd confirmed">
-        <span class="upd-badge b-confirmed">Confirmed</span>
-        <h3>Reporting structure &mdash; Principal then Category</h3>
-        <p>Morne clarified: FOMs walk the floor by category in-store, but end reporting is by principal. <strong>API response groups by principal</strong> with category as sub-level. Multiple categories can come through in one response. Luke to share example response structure with Christo to confirm field name and grouping logic before implementation.</p>
-      </div>
-
-      <div class="upd progress">
-        <span class="upd-badge b-progress">On track</span>
-        <h3>POC &mdash; 80 stores, 8 FOMs, same April store list continues</h3>
-        <p>8 FOMs each assigned 10 stores = 80 stores for May testing. <strong>Tina confirmed the same April store list continues for May</strong> &mdash; no new list required. Inconsistencies being logged (Cape Town stores returning fine; some Gauteng stores returning nothing) &mdash; helping surface remaining gaps. <strong>Stress test target: 1 July, ~1,400 stores, ~100 FOMs.</strong> Mac Mobile has paid upfront for Neurolabs and needs 40,000 images submitted H1 to recover costs.</p>
+        <p>Morne confirmed Pack &amp; Stack lost the Sir Fruits contract. <strong>Last day: 30 June 2026.</strong> Sir Fruits continues in the POC until then. SKUs to be <em>deactivated</em> (not deleted) in Neurolabs catalog after 30 June &mdash; kept inactive for potential competitor analysis. Tina to begin deactivation once Gareth and Toby confirm approach.</p>
       </div>
 
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-title">Gap tracker &mdash; updated 5 May 2026</div>
-    <div class="alert red"><strong>New critical issue 5 May:</strong> Image rotation bug &mdash; 60&ndash;80% of images arriving at Neurolabs rotated. Blocking all accuracy work. Romeo + app developers investigating urgently.</div>
+    <div class="sec-title">Gap tracker &mdash; updated 12 May 2026</div>
+    <div class="alert red"><strong>Critical &mdash; still open:</strong> Image rotation bug &mdash; 60&ndash;80% of images arriving at Neurolabs rotated. Blocking all accuracy work. Romeo must escalate urgently with daily updates to Toby.</div>
+    <div class="alert blue"><strong>In progress this morning &mdash; 12 May:</strong> Category API (GAP 6) implementation started between Tshego and Jordan. Double-nesting resolved. ID string/int issue still pending resolution.</div>
     <table>
       <thead><tr><th>Gap</th><th>Issue</th><th>Status</th><th>Owner</th></tr></thead>
       <tbody>
-        <tr><td><strong>GAP 1</strong></td><td>Ranging list incomplete / retailer mismatch. 8 of 9 principals now live. Cerebos (Sarah Boss) still outstanding &mdash; Webby file and Shoprite portal access unresolved.</td><td><span class="gs almost">Almost resolved</span></td><td><span class="ow cas">Gareth</span> <span class="ow pns">Camelle</span></td></tr>
-        <tr><td><strong>GAP 2</strong></td><td>Image quality / rotation. GCP blur/tilt rejection live (APK 22 Apr). <strong>NEW 5 May:</strong> 60&ndash;80% of images arriving rotated &mdash; EXIF metadata suspected. Blocking all AI accuracy improvement and reference image collection. Romeo escalating urgently.</td><td><span class="gs critical">Critical &mdash; Open</span></td><td><span class="ow mac">Romeo</span> <span class="ow neu">Toby</span></td></tr>
+        <tr><td><strong>GAP 1</strong></td><td>Ranging list incomplete / retailer mismatch. 8 of 9 principals live. Cerebos (Sarah Boss) Webby file and Shoprite portal access still outstanding.</td><td><span class="gs almost">Almost resolved</span></td><td><span class="ow cas">Gareth</span> <span class="ow pns">Camelle</span></td></tr>
+        <tr><td><strong>GAP 2</strong></td><td>Image quality / rotation. GCP blur/tilt rejection live (APK 22 Apr). <strong>Still open 12 May:</strong> 60&ndash;80% of images rotated (EXIF metadata). Blocking all AI accuracy improvement and reference image collection. Romeo escalating to app developers. Daily update to Toby.</td><td><span class="gs critical">Critical &mdash; Open</span></td><td><span class="ow mac">Romeo</span> <span class="ow neu">Toby</span></td></tr>
         <tr><td><strong>GAP 3</strong></td><td>Mac Mobile server instability (Vodacom). Ongoing monitoring. Linked to pending GCP / v18 migration.</td><td><span class="gs open">Open</span></td><td><span class="ow mac">Sean</span></td></tr>
-        <tr><td><strong>GAP 4</strong></td><td>Product catalog duplicates. <strong>Updated 5 May:</strong> v15 bug confirmed &mdash; updating product code creates duplicate. 909 lines unresolved. Sir Fruits SKUs to be deactivated (kept inactive). Fix: v18 upgrade, UAT starts Thursday (~4&ndash;5 wks). Workaround: PnS sends change files directly to Romeo/Christo.</td><td><span class="gs workaround">Workaround active</span></td><td><span class="ow mac">Romeo</span> <span class="ow mac">Christo</span> <span class="ow pns">Tina</span></td></tr>
-        <tr><td><strong>GAP 5</strong></td><td>Ranging list partial coverage. All available principals now loaded. Only Cerebos outstanding (linked to GAP 1).</td><td><span class="gs almost">Almost resolved</span></td><td><span class="ow key">Jordan</span></td></tr>
-        <tr><td><strong>GAP 6</strong></td><td>Category mapping misaligned. <strong>Updated 5 May:</strong> Category API in progress at Keystone. Luke delivering this week. Morne confirmed: FOMs work by category in-store, end reports by principal.</td><td><span class="gs inprog">In progress &mdash; This week</span></td><td><span class="ow key">Luke</span> <span class="ow key">Jordan</span> <span class="ow mac">Christo</span></td></tr>
-        <tr><td><strong>GAP 7</strong></td><td>Keystone API lacks Category structure in response. <strong>Updated 5 May:</strong> Linked to GAP 6. Luke delivering Category API this week. Mac Mobile implements within 1 day of receipt.</td><td><span class="gs inprog">In progress &mdash; This week</span></td><td><span class="ow key">Luke</span> <span class="ow key">Jordan</span></td></tr>
-        <tr><td><strong>GAP 8</strong></td><td>Duplicate store IDs (old PnS vs AIS system). Jordan created double ranging entries as workaround. Cleanup tied to v18 migration &mdash; AIS IDs only going forward.</td><td><span class="gs workaround">Workaround in place</span></td><td><span class="ow key">Jordan</span></td></tr>
-        <tr><td><strong>GAP 9</strong></td><td>Zero suppression &mdash; no ranging = zero returned. <strong>Updated 5 May:</strong> Option 3 (Not Applicable flag) confirmed and in progress at Keystone, targeting COB Wednesday. Mac Mobile implements Thursday.</td><td><span class="gs inprog">In progress &mdash; This week</span></td><td><span class="ow key">Luke</span> <span class="ow key">Jordan</span></td></tr>
+        <tr><td><strong>GAP 4</strong></td><td>Product catalog duplicates. v15 bug confirmed &mdash; updating product code creates duplicate. Workaround active: PnS sends change files directly to Romeo/Christo/Tshego (confirmed 12 May). 4 principals backlogged: Premier, Astral, JDE, Miami. Fix: v18 upgrade &mdash; UAT started, ~4&ndash;5 wks.</td><td><span class="gs workaround">Workaround active</span></td><td><span class="ow mac">Romeo</span> <span class="ow mac">Tshego</span> <span class="ow mac">Christo</span> <span class="ow pns">Tina</span></td></tr>
+        <tr><td><strong>GAP 5</strong></td><td>Ranging list partial coverage. All available principals loaded. Only Cerebos outstanding (linked to GAP 1).</td><td><span class="gs almost">Almost resolved</span></td><td><span class="ow key">Jordan</span></td></tr>
+        <tr><td><strong>GAP 6</strong></td><td>Category mapping misaligned. <strong>Updated 12 May:</strong> Jordan deployed Category API to Keystone production 7 May. Tshego implementing Mac Mobile side today &mdash; double-nesting resolved, string/integer ID bug being closed with Jordan right now.</td><td><span class="gs inprog">In progress &mdash; today</span></td><td><span class="ow key">Jordan</span> <span class="ow mac">Tshego</span></td></tr>
+        <tr><td><strong>GAP 7</strong></td><td>Keystone API lacks Category structure. <strong>Updated 7 May:</strong> Jordan deployed Not Applicable / Option 3 response to Keystone production 7 May. Mac Mobile implementing alongside Category API. Both to be confirmed live today.</td><td><span class="gs inprog">Keystone done &mdash; Mac implementing</span></td><td><span class="ow key">Jordan</span> <span class="ow mac">Tshego</span></td></tr>
+        <tr><td><strong>GAP 8</strong></td><td>Duplicate store IDs (old PnS vs AIS system). Jordan double-listed as workaround. AIS IDs only going forward. Cleanup tied to v18 migration.</td><td><span class="gs workaround">Workaround in place</span></td><td><span class="ow key">Jordan</span></td></tr>
+        <tr><td><strong>GAP 9</strong></td><td>Zero suppression &mdash; no ranging = zero returned. <strong>Updated 7 May:</strong> Jordan deployed Option 3 (status + status_reason fields) to Keystone production on 7 May. Tshego implementing Mac Mobile changes alongside Category API today. Confirm live at 3pm.</td><td><span class="gs inprog">Keystone done &mdash; Mac implementing</span></td><td><span class="ow key">Jordan</span> <span class="ow mac">Tshego</span></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="sec">
-    <div class="sec-title">Principal matrix &mdash; updated 5 May 2026</div>
+    <div class="sec-title">Principal matrix &mdash; updated 12 May 2026</div>
     <table>
       <thead><tr><th>Principal</th><th>Checkers</th><th>Pick n Pay</th><th>Notes</th></tr></thead>
       <tbody>
@@ -232,56 +234,47 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
   </div>
 
   <div class="sec">
-    <div class="sec-title">Open actions &mdash; updated 5 May 2026</div>
+    <div class="sec-title">Open actions &mdash; updated 12 May 2026</div>
     <table>
       <thead><tr><th>Owner</th><th>Action</th><th>Due</th></tr></thead>
       <tbody>
-        <tr><td><span class="ow cas">Gareth</span></td><td><strong>Send updated meeting minutes</strong> &mdash; API details, null response, category API updates to full team</td><td><span class="du urg">Today</span></td></tr>
-        <tr><td><span class="ow cas">Gareth</span></td><td>Add Gareth to all duplication workflow communications</td><td><span class="du urg">Today</span></td></tr>
-        <tr><td><span class="ow cas">Gareth</span></td><td>Schedule Pricing &amp; Promos call &mdash; Toby + Jordan/Luke + Gareth &mdash; Thursday afternoon</td><td><span class="du urg">Today</span></td></tr>
-        <tr><td><span class="ow cas">Gareth</span></td><td>Confirm Sir Fruits deactivation approach with Toby and Morne &mdash; inactive (not deleted)</td><td><span class="du wk">This week</span></td></tr>
         <tr><td><span class="ow cas">Gareth</span></td><td>Follow up Cerebos / Sarah Boss Webby file &mdash; get final 9th principal live</td><td><span class="du wk">ASAP</span></td></tr>
+        <tr><td><span class="ow cas">Gareth</span></td><td>Confirm Sir Fruits deactivation approach with Toby and Morne &mdash; inactive (not deleted)</td><td><span class="du wk">This week</span></td></tr>
         <tr><td><span class="ow cas">Gareth</span></td><td>Weekly Andrew Dawson status report</td><td><span class="du go">Every Friday</span></td></tr>
-        <tr><td><span class="ow key">Cameron</span></td><td><strong>Send confirmed delivery dates</strong> for Category API and Null/NA response &mdash; exact dates, no open-ended commitments</td><td><span class="du urg">Today</span></td></tr>
         <tr><td><span class="ow key">Cameron</span></td><td>Ensure Cameron and Luke both included on all relevant email trails going forward</td><td><span class="du go">Ongoing</span></td></tr>
-        <tr><td><span class="ow key">Cameron</span></td><td>Coordinate Pricing &amp; Promos use case development with Romeo and Luke ahead of Thursday call</td><td><span class="du wk">Thursday</span></td></tr>
-        <tr><td><span class="ow key">Luke</span></td><td><strong>Deliver Not Applicable / null response (Option 3)</strong> &mdash; Mac Mobile needs COB tomorrow to go live by Friday</td><td><span class="du urg">COB Tomorrow</span></td></tr>
-        <tr><td><span class="ow key">Luke</span></td><td>Deliver Category API &mdash; send confirmed date today. Confirm grouping: by principal with category as sub-level</td><td><span class="du urg">Confirm today</span></td></tr>
-        <tr><td><span class="ow key">Luke</span></td><td>Share example API response structure with Christo &mdash; confirm field name and grouping before implementation</td><td><span class="du wk">This week</span></td></tr>
-        <tr><td><span class="ow key">Jordan</span></td><td>Back from leave &mdash; pick up Category API and NA flag. Review all outstanding email threads</td><td><span class="du urg">Tomorrow</span></td></tr>
-        <tr><td><span class="ow mac">Romeo</span></td><td><strong>URGENT: Investigate image rotation bug</strong> with app developers &mdash; is it EXIF or device-side encoding? Daily update to Toby</td><td><span class="du urg">Urgent</span></td></tr>
-        <tr><td><span class="ow mac">Romeo / JH</span></td><td>Organise meeting with Cameron, Luke, Jordan &mdash; confirm required data tables for both dashboards</td><td><span class="du wk">This week</span></td></tr>
-        <tr><td><span class="ow mac">Romeo</span></td><td>Manage product upload workaround &mdash; receive PnS change files directly, apply updates (bypass help desk)</td><td><span class="du go">Until v18 live</span></td></tr>
-        <tr><td><span class="ow mac">Sean</span></td><td><strong>Define duplication workaround workflow</strong> with Ruan, Tina, Christo &mdash; clear process for next 4&ndash;5 weeks until v18 live</td><td><span class="du urg">ASAP</span></td></tr>
-        <tr><td><span class="ow mac">Sean</span></td><td>Contracts meeting with Morne tomorrow &mdash; IR project and Mac Mobile / PnS contracts, PO for catalogue development</td><td><span class="du urg">Tomorrow</span></td></tr>
-        <tr><td><span class="ow mac">Sean</span></td><td>Track and pressure Category API + NA response delivery from Keystone &mdash; target end of week</td><td><span class="du wk">This week</span></td></tr>
+        <tr><td><span class="ow key">Luke</span></td><td><strong>Confirm delivery date for Not Applicable / null response (Option 3)</strong> &mdash; no open-ended commitments. Raise at 3pm today</td><td><span class="du urg">Today &mdash; 3pm</span></td></tr>
+        <tr><td><span class="ow key">Luke</span></td><td>Share example API response structure with Christo &mdash; confirm field name and grouping before implementation</td><td><span class="du wk">ASAP</span></td></tr>
+        <tr><td><span class="ow key">Jordan</span></td><td><strong>Confirm Category API + Not Applicable response end-to-end with Tshego</strong> &mdash; both deployed to Keystone production 7 May. Validate Mac Mobile implementation live today</td><td><span class="du urg">Today &mdash; urgent</span></td></tr>
+        <tr><td><span class="ow key">Jordan</span></td><td>Confirm Pricing &amp; Promos data requirements at 3pm &mdash; RSP pricing per principal and promo broadsheet feed from PnS</td><td><span class="du wk">3pm today</span></td></tr>
+        <tr><td><span class="ow mac">Romeo</span></td><td><strong>URGENT: Image rotation bug &mdash; escalate to app developers. Daily update to Toby until resolved</strong></td><td><span class="du urg">Urgent &mdash; ongoing</span></td></tr>
+        <tr><td><span class="ow mac">Romeo</span></td><td>Manage product upload workaround &mdash; receive PnS change files (Premier, Astral, JDE, Miami backlog first), apply updates</td><td><span class="du go">Until v18 live</span></td></tr>
+        <tr><td><span class="ow mac">Sean</span></td><td><strong>Signed contracts</strong> &mdash; IR project contract and Mac Mobile / PnS contract. PO for catalogue development. Chase Morne for sign-off</td><td><span class="du urg">This week</span></td></tr>
         <tr><td><span class="ow mac">Sean</span></td><td>Monitor Mac Mobile server stability (Vodacom). Ongoing. Linked to GCP / v18 migration</td><td><span class="du go">Ongoing</span></td></tr>
-        <tr><td><span class="ow mac">Christo</span></td><td>Implement Category API and NA response within 1 day of receiving from Keystone</td><td><span class="du wk">On receipt</span></td></tr>
-        <tr><td><span class="ow mac">Christo</span></td><td>Receive product change files directly from PnS and apply &mdash; v15 duplication workaround</td><td><span class="du go">Until v18 live</span></td></tr>
+        <tr><td><span class="ow mac">Christo</span></td><td>Implement Not Applicable / null response within 1 day of receiving structure from Keystone</td><td><span class="du wk">On receipt</span></td></tr>
+        <tr><td><span class="ow mac">Christo</span></td><td>Receive product change files from PnS and apply &mdash; v15 duplication workaround (confirmed process 12 May)</td><td><span class="du go">Until v18 live</span></td></tr>
+        <tr><td><span class="ow mac">Tshego</span></td><td><strong>Confirm Category API ID integer fix is deployed</strong> &mdash; or confirm with Jordan whether Keystone should accept strings instead</td><td><span class="du urg">Today &mdash; urgent</span></td></tr>
+        <tr><td><span class="ow mac">Tshego</span></td><td>Receive product change files from PnS and apply &mdash; v15 duplication workaround</td><td><span class="du go">Until v18 live</span></td></tr>
         <tr><td><span class="ow neu">Toby</span></td><td>Monitor image rotation bug &mdash; confirm % of images affected. Notify team immediately when correct images start arriving</td><td><span class="du go">Ongoing</span></td></tr>
-        <tr><td><span class="ow neu">Toby</span></td><td>Confirm Sir Fruits SKU handling &mdash; inactive vs deleted. Attend Thursday Pricing &amp; Promos call</td><td><span class="du wk">This week</span></td></tr>
-        <tr><td><span class="ow pns">Tina</span></td><td><strong>Give Morne and Camelle access</strong> to AIS reporting dashboard (image recognition reporting category)</td><td><span class="du urg">Today</span></td></tr>
-        <tr><td><span class="ow pns">Tina</span></td><td>Send product change files directly to Romeo/Christo during v15 workaround period</td><td><span class="du go">Until v18 live</span></td></tr>
-        <tr><td><span class="ow pns">Tina</span></td><td>Begin Sir Fruits SKU deactivation once Gareth and Toby confirm approach</td><td><span class="du wk">This week</span></td></tr>
-        <tr><td><span class="ow pns">Morne</span></td><td>Communicate Sir Fruits contract loss to full team. Review AIS dashboard tomorrow at PnS with Tina</td><td><span class="du urg">Today / Tomorrow</span></td></tr>
+        <tr><td><span class="ow neu">Toby</span></td><td>Confirm Sir Fruits SKU handling &mdash; inactive vs deleted, competitor data approach</td><td><span class="du wk">This week</span></td></tr>
+        <tr><td><span class="ow pns">Tina</span></td><td><strong>Send product change files to Romeo / Tshego / Christo</strong> &mdash; 1 file per email. Backlog: Premier, Astral, JDE, Miami. Process confirmed 12 May</td><td><span class="du urg">Today</span></td></tr>
+        <tr><td><span class="ow pns">Tina</span></td><td>Confirm v18 UAT has started (QA instances delivered 7 May). Weekly progress update to team</td><td><span class="du urg">Confirm today</span></td></tr>
+        <tr><td><span class="ow pns">Tina</span></td><td>Begin Sir Fruits SKU deactivation once Gareth and Toby confirm approach</td><td><span class="du wk">By 30 Jun</span></td></tr>
+        <tr><td><span class="ow pns">Morne</span></td><td><strong>Sign contracts</strong> &mdash; IR project + Mac Mobile / PnS. PO for catalogue development. Andrew Dawson has asked directly</td><td><span class="du urg">This week</span></td></tr>
         <tr><td><span class="ow pns">Morne</span></td><td>Continue managing 8 POC FOMs across 80 stores. Push for consistent capture across all principals before June scale-up</td><td><span class="du go">Ongoing</span></td></tr>
-        <tr><td><span class="ow pns">Ruan</span></td><td><strong>Start Mac Mobile v18 UAT testing</strong> &mdash; new QA link expected Thursday. Weekly progress updates. Estimated 4&ndash;5 week cycle</td><td><span class="du wk">Starts Thursday</span></td></tr>
-        <tr><td><span class="ow pns">Ruan</span></td><td>Coordinate with Sean on direct escalation path (Romeo/Christo) for product changes during v15 bug</td><td><span class="du urg">ASAP</span></td></tr>
+        <tr><td><span class="ow pns">Ruan</span></td><td>Lead Mac Mobile v18 UAT testing &mdash; confirm started. Weekly progress updates. Estimated 4&ndash;5 week cycle</td><td><span class="du wk">In progress</span></td></tr>
         <tr><td><span class="ow pns">Camelle</span></td><td>Daily operational status doc &mdash; all events under 5 min = system working. Share with Gareth each day</td><td><span class="du go">Daily</span></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="sec">
-    <div class="sec-title">Key dates</div>
+    <div class="sec-title">Key dates &mdash; updated 12 May 2026</div>
     <div class="tl">
-      <div class="tl-row"><div class="tl-date urg">Today<br>6 May 2026</div><div class="tl-body"><strong>Gareth:</strong> Send updated minutes + API details to team<br><strong>Cameron:</strong> Send confirmed delivery dates for Category API and Null/NA response<br><strong>Tina:</strong> Give Morne + Camelle access to AIS reporting dashboard<br><strong>Morne:</strong> Communicate Sir Fruits contract loss to full team</div></div>
-      <div class="tl-row"><div class="tl-date urg">Tomorrow<br>7 May</div><div class="tl-body"><strong>Jordan</strong> back from leave &mdash; picks up Category API and NA flag<br><strong>Luke:</strong> Deliver Null/NA response (Option 3) COB &mdash; Mac Mobile implements within 1 day<br><strong>Sean + Morne:</strong> Contracts meeting (Sean dialling in)<br><strong>Morne + Tina:</strong> Reporting dashboard walkthrough at PnS</div></div>
-      <div class="tl-row"><div class="tl-date">Thursday<br>8 May</div><div class="tl-body"><strong>Pricing &amp; Promos call:</strong> Toby + Jordan/Luke + Gareth (Thursday afternoon)<br><strong>Ruan:</strong> Receives new v18 QA link from Mac Mobile &mdash; UAT testing begins<br><strong>Sean:</strong> Travelling to Joburg, in-person at PnS</div></div>
-      <div class="tl-row"><div class="tl-date">End of week<br>9 May</div><div class="tl-body"><strong>Target:</strong> Category API and Null/NA response live &mdash; FOMs see clean category views, NA replaces zeros<br><strong>Target:</strong> AIS reporting dashboard fully accessible to PnS team</div></div>
-      <div class="tl-row"><div class="tl-date">May&ndash;June<br>2026</div><div class="tl-body">POC: 8 FOMs &times; 10 stores = 80 stores, 8 principals. April store list continues for May<br>Target: 40,000 images submitted H1 (Neurolabs billing commitment)<br>Mac Mobile v18 UAT: ~4&ndash;5 weeks from Thursday (Ruan leading)</div></div>
+      <div class="tl-row"><div class="tl-date urg">Today<br>12 May 2026<br>3pm call</div><div class="tl-body"><strong>Item 1:</strong> Tshego + Jordan &mdash; confirm Category API and Not Applicable response both live end-to-end<br><strong>Item 2:</strong> Romeo + Toby &mdash; image rotation bug status, root cause, fix timeline<br><strong>Item 3:</strong> Morne + Sean &mdash; signed contracts update<br><strong>Item 4:</strong> Tina / Romeo / Tshego / Christo &mdash; product file backlog sent and actioned (Premier, Astral, JDE, Miami)<br><strong>Item 5:</strong> Tina + Ruan &mdash; v18 UAT started confirmation<br><strong>Item 6:</strong> Toby + Jordan + Gareth &mdash; Pricing &amp; Promos data requirements</div></div>
+      <div class="tl-row"><div class="tl-date urg">This week</div><div class="tl-body"><strong>Contracts:</strong> IR and Mac Mobile / PnS sign-off + PO for catalogue development (Sean + Morne)<br><strong>Not Applicable flag (Option 3):</strong> Luke / Jordan to deliver structure &mdash; Mac Mobile implements within 1 day<br><strong>Image rotation:</strong> Romeo to escalate urgently to app developers &mdash; daily update to Toby<br><strong>Category API:</strong> Full resolution of string/int issue and end-to-end validation</div></div>
+      <div class="tl-row"><div class="tl-date">May&ndash;June<br>2026</div><div class="tl-body">POC: 8 FOMs &times; 10 stores = 80 stores, 8 principals. April store list continues for May<br>Target: 40,000 images submitted H1 (Neurolabs billing commitment)<br>Mac Mobile v18 UAT: ~4&ndash;5 weeks from start (Ruan leading for PnS)</div></div>
       <div class="tl-row"><div class="tl-date">30 June 2026</div><div class="tl-body"><strong>Sir Fruits last day.</strong> Deactivate SKUs in Neurolabs (kept inactive for competitor analysis). Gareth, Toby, Morne to confirm approach.</div></div>
-      <div class="tl-row"><div class="tl-date grn">1 July 2026</div><div class="tl-body"><strong>Stress test target:</strong> ~1,400 stores, ~100 FOMs, full national rollout across 8 principals. Weekly readiness monitoring from now. All issues must be resolved before this date.</div></div>
+      <div class="tl-row"><div class="tl-date grn">1 July 2026</div><div class="tl-body"><strong>Stress test target:</strong> ~1,400 stores, ~100 FOMs, full national rollout across 8 principals. Weekly readiness monitoring from now. All issues must be resolved before this date. <strong>Andrew Dawson has flagged the project is behind schedule.</strong></div></div>
       <div class="tl-row"><div class="tl-date grn">July 2026</div><div class="tl-body"><strong>Full deployment and volume ramp-up</strong> &mdash; all principals, Checkers and PnP at scale.</div></div>
     </div>
   </div>
@@ -291,19 +284,20 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
     <div class="naming"><strong>Naming rule:</strong> &ldquo;Cam / Kamal / Kamala / Camela&rdquo; in Fireflies transcripts = <strong>Camelle Pietersen (Pack &amp; Stack)</strong>. &ldquo;Cameron&rdquo; = <strong>Cameron Dawson (Keystone / Cognizance)</strong>. Never confuse. Field staff are always <strong>FOMs (Field Operations Managers)</strong> &mdash; never &ldquo;merchandisers&rdquo;.</div>
     <div class="sk-grid">
       <div class="sk-card"><div class="sk-name">Gareth Paterson</div><div class="sk-role">CA&amp;S Digital &mdash; Project Lead</div><div class="sk-desc">End-to-end project lead. Stakeholder coordination, data governance, ranging sign-off, keeping all four technology partners aligned. Reports to Andrew Dawson every Friday.</div></div>
-      <div class="sk-card"><div class="sk-name">Andrew Dawson</div><div class="sk-role">CA&amp;S Group &mdash; CTO</div><div class="sk-desc">Senior stakeholder. Receives weekly Friday status update from Gareth. Not a day-to-day participant. Has flagged all actions as urgent.</div></div>
-      <div class="sk-card"><div class="sk-name">Sean Tennent</div><div class="sk-role">Mac Mobile &mdash; Commercial Lead</div><div class="sk-desc">Server infrastructure, Vodacom stability, commercial sign-off. Leading v18 Optimise upgrade plan and duplication workaround workflow. Signed contracts and PO for catalogue development required.</div></div>
-      <div class="sk-card"><div class="sk-name">Christo Stander</div><div class="sk-role">Mac Mobile &mdash; Technical Lead</div><div class="sk-desc">App config, GCP APK release, Category API implementation, zero suppression, metadata packaging to Keystone. Receiving PnS product change files directly during v15 bug.</div></div>
-      <div class="sk-card"><div class="sk-name">Romeo Segwati</div><div class="sk-role">Mac Mobile</div><div class="sk-desc">Investigating image rotation bug urgently with app developers. Built AIS reporting dashboard (now live). Managing product upload workaround for PnS. Organising dashboard data table meeting with Keystone.</div></div>
-      <div class="sk-card"><div class="sk-name">Jan-Hendrik Putter (JH)</div><div class="sk-role">Mac Mobile</div><div class="sk-desc">Reporting build and app-side development. Building customer and manager-facing reports. Coordinating with Romeo on dashboard data structure for both dashboards.</div></div>
-      <div class="sk-card"><div class="sk-name">Cameron Dawson</div><div class="sk-role">Keystone / Cognizance &mdash; Analytics Lead</div><div class="sk-desc">Keystone API, compliance calculations, ranging and listing logic, dashboard data. Promo use case development. Must be included on all email trails &mdash; confirmed 5 May.</div></div>
-      <div class="sk-card"><div class="sk-name">Jordan Kirkbride</div><div class="sk-role">Keystone / Cognizance &mdash; Technical</div><div class="sk-desc">Ranging lists, Category API, NA flag, SKU-category mapping, duplicate store ID cleanup. Primary day-to-day technical contact. Back from leave 7 May.</div></div>
-      <div class="sk-card"><div class="sk-name">Luke Baillie</div><div class="sk-role">Keystone / Cognizance</div><div class="sk-desc">Delivering Category API and Null/NA response this week. Confirmed grouping logic (by principal) with Morne. Increasingly involved day-to-day alongside Jordan. Must be on all relevant email trails.</div></div>
-      <div class="sk-card"><div class="sk-name">Toby Thomas</div><div class="sk-role">Neurolabs &mdash; Lead</div><div class="sk-desc">AI image recognition, product catalog management, accuracy validation. Monitoring image rotation bug. Attending Thursday pricing &amp; promos call. Confirming Sir Fruits deactivation approach.</div></div>
-      <div class="sk-card"><div class="sk-name">Morne Small</div><div class="sk-role">Pack &amp; Stack &mdash; Commercial Director</div><div class="sk-desc">POC coordination, FOM management, commercial decisions. Confirmed Sir Fruits contract loss. Contracts discussion with Sean tomorrow. Dashboard walkthrough at PnS tomorrow.</div></div>
-      <div class="sk-card"><div class="sk-name">Camelle Pietersen</div><div class="sk-role">Pack &amp; Stack &mdash; Ops Lead &middot; Transcripts: &ldquo;Cam / Kamal&rdquo;</div><div class="sk-desc">Ranging data, field ops, daily status doc. Awaiting Cerebos response from Oscar. Dashboard access being granted today by Tina.</div></div>
-      <div class="sk-card"><div class="sk-name">Ruan Lombard</div><div class="sk-role">Pack &amp; Stack</div><div class="sk-desc">Governance, GCP UAT coordination. Leading v18 Mac Mobile UAT testing from Thursday. Coordinating with Sean on product change escalation path during v15 bug.</div></div>
-      <div class="sk-card"><div class="sk-name">Tina van der Berg</div><div class="sk-role">Pack &amp; Stack / PnP &mdash; Product Data</div><div class="sk-desc">Product data cleanup, catalog alignment, ranging sign-off. Granting dashboard access today. Sending product change files to Romeo/Christo. Managing Sir Fruits SKU deactivation.</div></div>
+      <div class="sk-card"><div class="sk-name">Andrew Dawson</div><div class="sk-role">CA&amp;S Group &mdash; CTO</div><div class="sk-desc">Senior stakeholder. Receives weekly Friday status update from Gareth. Has publicly flagged the project is behind schedule and all action points must be treated as highest priority.</div></div>
+      <div class="sk-card"><div class="sk-name">Sean Tennent</div><div class="sk-role">Mac Mobile &mdash; Commercial Lead</div><div class="sk-desc">Server infrastructure, Vodacom stability, commercial sign-off. Chasing signed contracts and PO for catalogue development. Monitoring v18 upgrade plan.</div></div>
+      <div class="sk-card"><div class="sk-name">Christo Stander</div><div class="sk-role">Mac Mobile &mdash; Technical Lead</div><div class="sk-desc">App config, GCP APK release, Not Applicable response implementation, metadata packaging to Keystone. Receiving PnS product change files directly during v15 bug.</div></div>
+      <div class="sk-card"><div class="sk-name">Romeo Segwati</div><div class="sk-role">Mac Mobile</div><div class="sk-desc">Investigating image rotation bug urgently. Built AIS reporting dashboard (now live). Managing product upload workaround for PnS. Must escalate rotation bug daily to Toby.</div></div>
+      <div class="sk-card"><div class="sk-name">Tshego Mudau</div><div class="sk-role">Mac Mobile</div><div class="sk-desc">Implementing Category API operational_categories payload to Keystone. Resolved double-nesting bug 12 May. Working with Jordan on string vs integer ID issue. Receiving PnS product change files.</div></div>
+      <div class="sk-card"><div class="sk-name">Jan-Hendrik Putter (JH)</div><div class="sk-role">Mac Mobile</div><div class="sk-desc">Reporting build and app-side development. Building customer and manager-facing reports. Coordinating with Romeo on dashboard data structure.</div></div>
+      <div class="sk-card"><div class="sk-name">Cameron Dawson</div><div class="sk-role">Keystone / Cognizance &mdash; Analytics Lead</div><div class="sk-desc">Keystone API, compliance calculations, ranging and listing logic, dashboard data. Must be included on all email trails alongside Luke and Jordan.</div></div>
+      <div class="sk-card"><div class="sk-name">Jordan Kirkbride</div><div class="sk-role">Keystone / Cognizance &mdash; Technical</div><div class="sk-desc">Deployed both Category API and Not Applicable / Option 3 response to Keystone production on 7 May. Validating Mac Mobile implementation with Tshego today. Ranging lists, duplicate store ID cleanup, Pricing &amp; Promos data requirements.</div></div>
+      <div class="sk-card"><div class="sk-name">Luke Baillie</div><div class="sk-role">Keystone / Cognizance</div><div class="sk-desc">Delivering Not Applicable / null response (Option 3). Must confirm delivery date at 3pm today. Must be included on all relevant email trails.</div></div>
+      <div class="sk-card"><div class="sk-name">Toby Thomas</div><div class="sk-role">Neurolabs &mdash; Lead</div><div class="sk-desc">AI image recognition, product catalog management, accuracy validation. Monitoring image rotation bug. Confirming Sir Fruits deactivation approach.</div></div>
+      <div class="sk-card"><div class="sk-name">Morne Small</div><div class="sk-role">Pack &amp; Stack &mdash; Commercial Director</div><div class="sk-desc">POC coordination, FOM management, commercial decisions. Contracts sign-off outstanding &mdash; flagged by Andrew Dawson. Sir Fruits contract loss confirmed.</div></div>
+      <div class="sk-card"><div class="sk-name">Camelle Pietersen</div><div class="sk-role">Pack &amp; Stack &mdash; Ops Lead &middot; Transcripts: &ldquo;Cam / Kamal&rdquo;</div><div class="sk-desc">Ranging data, field ops, daily status doc. Awaiting Cerebos response from Oscar. AIS reporting dashboard access granted.</div></div>
+      <div class="sk-card"><div class="sk-name">Ruan Lombard</div><div class="sk-role">Pack &amp; Stack</div><div class="sk-desc">Governance, v18 Mac Mobile UAT lead for PnS. Chased product file upload process this morning. Weekly UAT progress updates required.</div></div>
+      <div class="sk-card"><div class="sk-name">Tina van der Berg</div><div class="sk-role">Pack &amp; Stack / PnP &mdash; Product Data</div><div class="sk-desc">Product data cleanup, catalog alignment, ranging sign-off. Sending product change file backlog today (Premier, Astral, JDE, Miami). Managing Sir Fruits SKU deactivation. UAT lead for v18.</div></div>
     </div>
   </div>
 </div>
@@ -312,22 +306,22 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
 <div class="panel" id="p-flow">
   <div class="sec">
     <div class="sec-title">IR Project &mdash; End-to-End Process Flow</div>
-    <p style="font-size:12px;color:#6b6f7a;margin-bottom:12px;">CA&amp;S Digital &middot; Updated 5 May 2026 &middot; Sources: 5 May check-in (15 attendees) + Jordan Kirkbride confirmations</p>
-    <div class="alert red"><strong>New 5 May &mdash; Critical:</strong> Image rotation bug at capture phase. 60&ndash;80% of images arriving at Neurolabs rotated &mdash; blocking all AI accuracy work. Romeo investigating urgently.</div>
-    <div class="alert blue"><strong>In progress this week:</strong> GAP 6 (Category API) and GAP 7+9 (Not Applicable flag replacing zeros) &mdash; Keystone targeting COB Wednesday. Mac Mobile implements within 1 day.</div>
-    <div class="alert green"><strong>New &mdash; Live 5 May:</strong> Reporting dashboard live on AIS backend. Tina granting PnS access today.</div>
+    <p style="font-size:12px;color:#6b6f7a;margin-bottom:12px;">CA&amp;S Digital &middot; Updated 12 May 2026 &middot; Sources: 5 May check-in + email threads 12 May 2026</p>
+    <div class="alert red"><strong>Critical &mdash; still open:</strong> Image rotation bug at capture phase. 60&ndash;80% of images arriving at Neurolabs rotated &mdash; blocking all AI accuracy work. Romeo investigating urgently.</div>
+    <div class="alert blue"><strong>Keystone side done &mdash; 7 May:</strong> Jordan deployed both Category API (GAP 6) and Not Applicable / Option 3 response (GAP 7+9) to Keystone production. Tshego implementing Mac Mobile side today &mdash; double-nesting resolved, string/integer ID being closed with Jordan.</div>
+    <div class="alert amber"><strong>3pm today &mdash; Item 6:</strong> Pricing &amp; Promos data requirements to be confirmed. Use cases built at Keystone, needs RSP pricing + promo broadsheets from PnS.</div>
     <div class="leg-wrap">
       <div class="leg"><div class="ls" style="background:#E1F5EE;border:1px solid #0F6E56"></div> Mac Mobile</div>
       <div class="leg"><div class="ls" style="background:#E6F1FB;border:1px solid #185FA5"></div> Neurolabs</div>
       <div class="leg"><div class="ls" style="background:#EEEDFE;border:1px solid #534AB7"></div> Keystone</div>
       <div class="leg"><div class="ls" style="background:#FAEEDA;border:1px solid #854F0B"></div> Pack &amp; Stack</div>
       <div class="leg"><div class="ls" style="background:#FCEBEB;border:1px solid #A32D2D;border-style:dashed"></div> Known gap</div>
-      <div class="leg"><div class="ls" style="background:#FCEBEB;border:2px solid #DC2626"></div> Critical &mdash; New 5 May</div>
+      <div class="leg"><div class="ls" style="background:#FCEBEB;border:2px solid #DC2626"></div> Critical &mdash; open</div>
       <div class="leg"><div class="ls" style="background:#E6F1FB;border:2px solid #185FA5"></div> In progress</div>
       <div class="leg"><div class="ls" style="background:#E1F5EE;border:2px solid #0F6E56"></div> Confirmed step</div>
     </div>
 <svg width="100%" viewBox="0 0 700 1980" role="img" xmlns="http://www.w3.org/2000/svg">
-<title>IR Project End-to-End Process Flow &mdash; Updated 5 May 2026</title>
+<title>IR Project End-to-End Process Flow &mdash; Updated 12 May 2026</title>
 <defs>
   <marker id="a"  viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round"/></marker>
   <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></marker>
@@ -374,9 +368,9 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
 <rect x="302" y="264" width="150" height="78" rx="7" fill="#FCEBEB" stroke="#DC2626" stroke-width="2" stroke-dasharray="4 2"/>
 <text x="377" y="281" font-size="10" font-weight="700" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">GAP 2 &#8212; CRITICAL</text>
 <text x="377" y="295" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">60&#8211;80% images ROTATED</text>
-<text x="377" y="308" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">EXIF issue &#183; New 5 May</text>
+<text x="377" y="308" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">EXIF issue &#183; Still open 12 May</text>
 <text x="377" y="321" font-size="9" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Blocking ALL AI accuracy</text>
-<text x="377" y="333" font-size="8" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Romeo investigating urgently</text>
+<text x="377" y="333" font-size="8" fill="#A32D2D" text-anchor="middle" dominant-baseline="central">Romeo escalating urgently</text>
 <line x1="302" y1="303" x2="292" y2="303" stroke="#E24B4A" stroke-width=".5" stroke-dasharray="3 2" marker-end="url(#ar)"/>
 <line x1="166" y1="328" x2="166" y2="358" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
 <rect x="44" y="358" width="244" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width=".5"/>
@@ -401,7 +395,7 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
 <text x="166" y="633" font-size="10" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Barcode + operational category</text>
 <rect x="302" y="596" width="150" height="50" rx="7" fill="#FAEEDA" stroke="#854F0B" stroke-width="1" stroke-dasharray="4 2"/>
 <text x="377" y="614" font-size="10" font-weight="700" fill="#854F0B" text-anchor="middle" dominant-baseline="central">GAP 4 &#8212; WORKAROUND</text>
-<text x="377" y="630" font-size="9" fill="#854F0B" text-anchor="middle" dominant-baseline="central">v15 dup bug &#183; v18 UAT Thu</text>
+<text x="377" y="630" font-size="9" fill="#854F0B" text-anchor="middle" dominant-baseline="central">v15 dup bug &#183; v18 UAT active</text>
 <line x1="302" y1="621" x2="292" y2="621" stroke="#854F0B" stroke-width=".5" stroke-dasharray="3 2" marker-end="url(#aa)"/>
 <line x1="166" y1="646" x2="166" y2="672" stroke="#185FA5" stroke-width="1" marker-end="url(#ab)"/>
 <text x="248" y="661" font-size="9" fill="#185FA5" font-weight="600" text-anchor="middle">back to Mac Mobile</text>
@@ -438,16 +432,17 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
 <text x="166" y="946" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">10. Cross-ref vs ranging list</text>
 <text x="166" y="962" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">On-shelf vs what should be there</text>
 <rect x="302" y="928" width="150" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
-<text x="377" y="946" font-size="10" font-weight="700" fill="#185FA5" text-anchor="middle" dominant-baseline="central">GAP 6 &#8212; IN PROGRESS</text>
-<text x="377" y="962" font-size="9" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Category API &#8212; target this week</text>
+<text x="377" y="940" font-size="10" font-weight="700" fill="#185FA5" text-anchor="middle" dominant-baseline="central">GAP 6 &#8212; ALMOST LIVE</text>
+<text x="377" y="954" font-size="9" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Keystone done 7 May &#183; Mac today</text>
+<text x="377" y="966" font-size="8" fill="#185FA5" text-anchor="middle" dominant-baseline="central">String/int bug being closed</text>
 <line x1="302" y1="953" x2="292" y2="953" stroke="#185FA5" stroke-width=".5" stroke-dasharray="3 2" marker-end="url(#ab)"/>
 <line x1="166" y1="978" x2="166" y2="1008" stroke="#534AB7" stroke-width="1" marker-end="url(#ap)"/>
 <rect x="44" y="1008" width="244" height="50" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/>
 <text x="166" y="1026" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">11. Build action output</text>
 <text x="166" y="1042" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">Principal &#8594; Category &#8594; Items</text>
 <rect x="302" y="1008" width="150" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
-<text x="377" y="1026" font-size="10" font-weight="700" fill="#185FA5" text-anchor="middle" dominant-baseline="central">GAP 7+9 &#8212; IN PROGRESS</text>
-<text x="377" y="1042" font-size="9" fill="#185FA5" text-anchor="middle" dominant-baseline="central">NA flag &#8212; target COB Wed</text>
+<text x="377" y="1026" font-size="10" font-weight="700" fill="#185FA5" text-anchor="middle" dominant-baseline="central">GAP 7+9 &#8212; ALMOST LIVE</text>
+<text x="377" y="1042" font-size="9" fill="#185FA5" text-anchor="middle" dominant-baseline="central">NA flag &#8212; Keystone done 7 May</text>
 <line x1="302" y1="1033" x2="292" y2="1033" stroke="#185FA5" stroke-width=".5" stroke-dasharray="3 2" marker-end="url(#ab)"/>
 <line x1="166" y1="1058" x2="166" y2="1088" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#a)"/>
 <text x="210" y="1075" font-size="9" fill="#888780" text-anchor="middle">API response</text>
@@ -469,11 +464,11 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
 <line x1="166" y1="1378" x2="166" y2="1408" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
 <rect x="44" y="1408" width="244" height="60" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width=".5"/>
 <text x="166" y="1428" font-size="12" font-weight="600" fill="#3C3489" text-anchor="middle" dominant-baseline="central">16. Dashboard reporting</text>
-<text x="166" y="1444" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">OSA, compliance &#8212; LIVE on AIS 5 May</text>
-<text x="166" y="1458" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">PnS access being granted today</text>
+<text x="166" y="1444" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">OSA, compliance &#8212; LIVE on AIS</text>
+<text x="166" y="1458" font-size="10" fill="#534AB7" text-anchor="middle" dominant-baseline="central">PnS access granted</text>
 <path d="M44 1438 L28 1438 L28 221 L44 221" fill="none" stroke="#D3D1C7" stroke-width=".5" stroke-dasharray="5 3" marker-end="url(#a)"/>
 <text x="22" y="820" font-size="8" fill="#B4B2A9" text-anchor="middle" transform="rotate(-90,22,820)">reporting loop</text>
-<text x="350" y="1530" font-size="9" fill="#9CA0AB" text-anchor="middle">CA&amp;S Digital &#183; IR Project &#183; Process flow updated 5 May 2026 &#183; IR check-in, 15 attendees</text>
+<text x="350" y="1530" font-size="9" fill="#9CA0AB" text-anchor="middle">CA&amp;S Digital &#183; IR Project &#183; Process flow updated 12 May 2026 &#183; 3pm check-in</text>
 </svg>
   </div>
 </div>
@@ -488,29 +483,28 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-seri
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Cerebos (Sarah Boss) &mdash; Webby file / Shoprite portal. Last outstanding principal of 9</div><div class="g-owners"><span class="ow cas">Gareth</span><span class="ow pns">Camelle</span></div><div class="g-due"><span class="du wk">ASAP</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Define ranging list refresh cadence &mdash; monthly+ update process</div><div class="g-owners"><span class="ow cas">Gareth</span><span class="ow key">Jordan</span></div><div class="g-due"><span class="du wk">May</span></div></div>
     <div class="g-phase">Phase 2 &mdash; Catalogue &amp; Category</div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task"><strong>Category API</strong> &mdash; Keystone delivering. By principal with category as sub-level. Mac implements within 1 day of receipt (GAP 6)</div><div class="g-owners"><span class="ow key">Luke</span><span class="ow key">Jordan</span><span class="ow mac">Christo</span></div><div class="g-due"><span class="du urg">This week</span></div></div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task"><strong>Not Applicable / null response (Option 3)</strong> &mdash; replaces zeros. Keystone COB Wednesday, Mac implements Thursday (GAP 7 + 9)</div><div class="g-owners"><span class="ow key">Luke</span><span class="ow key">Jordan</span></div><div class="g-due"><span class="du urg">COB Wed</span></div></div>
-    <div class="g-row"><div class="g-dot dot-blocked"></div><div class="g-task"><strong>Image rotation bug fix</strong> &mdash; 60&ndash;80% images rotated (EXIF). Blocking all accuracy improvement and reference image gathering. Romeo + app devs investigating urgently</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow neu">Toby</span></div><div class="g-due"><span class="du urg">Urgent</span></div></div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Product duplication bug &mdash; v15 creates new SKU on code update. Direct upload workaround active (PnS to Romeo/Christo). v18 UAT starts Thursday</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow mac">Christo</span><span class="ow pns">Tina</span></div><div class="g-due"><span class="du wk">v18: ~4&ndash;5 wks</span></div></div>
+    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task"><strong>Category API</strong> &mdash; Jordan deployed to Keystone production 7 May. Tshego implementing Mac Mobile side today. Double-nesting resolved, string/integer ID bug being closed (GAP 6)</div><div class="g-owners"><span class="ow key">Jordan</span><span class="ow mac">Tshego</span></div><div class="g-due"><span class="du urg">Today</span></div></div>
+    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task"><strong>Not Applicable / null response (Option 3)</strong> &mdash; Jordan deployed to Keystone production 7 May. Tshego implementing Mac Mobile side today alongside Category API. Confirm live at 3pm (GAP 7 + 9)</div><div class="g-owners"><span class="ow key">Jordan</span><span class="ow mac">Tshego</span></div><div class="g-due"><span class="du urg">Today</span></div></div>
+    <div class="g-row"><div class="g-dot dot-blocked"></div><div class="g-task"><strong>Image rotation bug fix</strong> &mdash; 60&ndash;80% images rotated (EXIF). Blocking all accuracy improvement and reference image gathering. Romeo escalating to app devs urgently. Daily update to Toby</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow neu">Toby</span></div><div class="g-due"><span class="du urg">Urgent</span></div></div>
+    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Product duplication bug &mdash; v15 creates new SKU on code update. Direct upload workaround confirmed 12 May (PnS to Romeo/Tshego/Christo). v18 UAT active (started ~7 May)</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow mac">Tshego</span><span class="ow mac">Christo</span><span class="ow pns">Tina</span></div><div class="g-due"><span class="du wk">v18: ~4&ndash;5 wks</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Sir Fruits SKU deactivation &mdash; contract lost, last day 30 June. Keep inactive (not deleted) for competitor analysis</div><div class="g-owners"><span class="ow pns">Tina</span><span class="ow neu">Toby</span><span class="ow cas">Gareth</span></div><div class="g-due"><span class="du wk">30 Jun</span></div></div>
-    <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Background catalog cleanup &mdash; residual duplicates, missing barcodes</div><div class="g-owners"><span class="ow pns">Tina</span><span class="ow neu">Toby</span></div><div class="g-due"><span class="du go">Ongoing</span></div></div>
+    <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Background catalog cleanup &mdash; residual duplicates, missing barcodes. Backlog: Premier, Astral, JDE, Miami product files to be sent by Tina today</div><div class="g-owners"><span class="ow pns">Tina</span><span class="ow neu">Toby</span></div><div class="g-due"><span class="du go">Ongoing</span></div></div>
     <div class="g-phase">Phase 3 &mdash; App &amp; Infrastructure</div>
     <div class="g-row"><div class="g-dot dot-done"></div><div class="g-task">GCP app release &mdash; blur/tilt rejection live (APK released 22 Apr)</div><div class="g-owners"><span class="ow mac">Christo</span><span class="ow mac">Sean</span></div><div class="g-due"><span class="du done">Done 22 Apr</span></div></div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Mac Mobile v18 upgrade (Optimise) &mdash; fixes duplication bug at root. UAT starts Thursday. Ruan leading for PnS</div><div class="g-owners"><span class="ow mac">Sean</span><span class="ow pns">Ruan</span></div><div class="g-due"><span class="du wk">Starts Thu &middot; ~4&ndash;5 wks</span></div></div>
+    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Mac Mobile v18 upgrade (Optimise) &mdash; fixes duplication bug at root. QA instances delivered 7 May. UAT active (Ruan + Tina leading for PnS)</div><div class="g-owners"><span class="ow mac">Sean</span><span class="ow pns">Ruan</span><span class="ow pns">Tina</span></div><div class="g-due"><span class="du wk">~4&ndash;5 wks</span></div></div>
     <div class="g-row"><div class="g-dot dot-done"></div><div class="g-task">Duplicate store ID cleanup &mdash; AIS-only list confirmed 21 April. Jordan workaround in place (GAP 8)</div><div class="g-owners"><span class="ow key">Jordan</span></div><div class="g-due"><span class="du done">Workaround done</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Mac Mobile server stability monitoring (Vodacom) &mdash; GAP 3. Ongoing</div><div class="g-owners"><span class="ow mac">Sean</span></div><div class="g-due"><span class="du go">Ongoing</span></div></div>
     <div class="g-phase">Phase 4 &mdash; Reporting &amp; Commercial</div>
-    <div class="g-row"><div class="g-dot dot-done"></div><div class="g-task"><strong>AIS reporting dashboard live</strong> &mdash; submissions, results, click-through to in-store view. Romeo built. Tina granting PnS access today</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow pns">Tina</span></div><div class="g-due"><span class="du done">Live 5 May</span></div></div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Dashboard data tables &mdash; Romeo + JH to meet Cameron, Luke, Jordan to confirm required data structure for both dashboards</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow key">Luke</span><span class="ow key">Jordan</span></div><div class="g-due"><span class="du wk">This week</span></div></div>
+    <div class="g-row"><div class="g-dot dot-done"></div><div class="g-task"><strong>AIS reporting dashboard live</strong> &mdash; submissions, results, click-through to in-store view. Romeo built. PnS access granted</div><div class="g-owners"><span class="ow mac">Romeo</span><span class="ow pns">Tina</span></div><div class="g-due"><span class="du done">Live 5 May</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Client reporting &mdash; final development incorporating Morne&rsquo;s feedback</div><div class="g-owners"><span class="ow mac">JH</span><span class="ow pns">Morne</span></div><div class="g-due"><span class="du wk">This week</span></div></div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Signed contracts &mdash; IR project and Mac Mobile / PnS. PO for catalogue development moving from Neurolabs to Mac Mobile</div><div class="g-owners"><span class="ow mac">Sean</span><span class="ow pns">Morne</span></div><div class="g-due"><span class="du urg">Tomorrow</span></div></div>
-    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Pricing &amp; Promos use cases &mdash; technically built, needs RSP data + promo broadsheets. Call Thursday: Toby + Jordan/Luke + Gareth</div><div class="g-owners"><span class="ow neu">Toby</span><span class="ow key">Jordan</span><span class="ow cas">Gareth</span></div><div class="g-due"><span class="du wk">Thursday</span></div></div>
+    <div class="g-row"><div class="g-dot dot-blocked"></div><div class="g-task"><strong>Signed contracts</strong> &mdash; IR project + Mac Mobile / PnS. PO for catalogue development moving from Neurolabs to Mac Mobile. No update from Morne. Andrew Dawson has asked directly</div><div class="g-owners"><span class="ow mac">Sean</span><span class="ow pns">Morne</span></div><div class="g-due"><span class="du urg">This week</span></div></div>
+    <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">Pricing &amp; Promos use cases &mdash; technically built at Keystone. Needs RSP data + promo broadsheets from PnS. <strong>Data requirements to be confirmed at 3pm today</strong></div><div class="g-owners"><span class="ow neu">Toby</span><span class="ow key">Jordan</span><span class="ow cas">Gareth</span></div><div class="g-due"><span class="du urg">3pm today</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Camelle daily operational status doc &mdash; all events under 5 min = system working</div><div class="g-owners"><span class="ow pns">Camelle</span></div><div class="g-due"><span class="du go">Daily</span></div></div>
-    <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Andrew Dawson weekly status report</div><div class="g-owners"><span class="ow cas">Gareth</span></div><div class="g-due"><span class="du go">Every Friday</span></div></div>
+    <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Andrew Dawson weekly status report. Has flagged project is behind schedule &mdash; all actions highest priority</div><div class="g-owners"><span class="ow cas">Gareth</span></div><div class="g-due"><span class="du go">Every Friday</span></div></div>
     <div class="g-phase">Phase 5 &mdash; Stress Test &amp; Scale</div>
     <div class="g-row"><div class="g-dot dot-active"></div><div class="g-task">POC running &mdash; 8 FOMs &times; 10 stores = 80 stores, 8 principals. Same April store list continues for May (confirmed Tina). Target 40,000 images H1</div><div class="g-owners"><span class="ow all">All</span></div><div class="g-due"><span class="du go">Ongoing</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Sir Fruits &mdash; continue in POC until 30 June, then deactivate SKUs in Neurolabs (keep inactive)</div><div class="g-owners"><span class="ow pns">Morne</span><span class="ow neu">Toby</span></div><div class="g-due"><span class="du wk">30 Jun</span></div></div>
-    <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Stress test &mdash; ~1,400 stores, ~100 FOMs. All issues must be resolved. Weekly readiness monitoring from now</div><div class="g-owners"><span class="ow all">All</span></div><div class="g-due"><span class="du jul">1 Jul 2026</span></div></div>
+    <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Stress test &mdash; ~1,400 stores, ~100 FOMs. All issues must be resolved. Weekly readiness monitoring from now. <strong>Project flagged behind schedule by Andrew Dawson</strong></div><div class="g-owners"><span class="ow all">All</span></div><div class="g-due"><span class="du jul">1 Jul 2026</span></div></div>
     <div class="g-row"><div class="g-dot dot-open"></div><div class="g-task">Full national deployment &mdash; all principals, Checkers and PnP at scale</div><div class="g-owners"><span class="ow all">All</span></div><div class="g-due"><span class="du jul">Jul 2026</span></div></div>
   </div>
 </div>
